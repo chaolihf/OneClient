@@ -1,5 +1,4 @@
-module com.chinatelecom.oneops
-
+module com.chinatelecom.oneops.client
 go 1.21.6
 
 require github.com/dop251/goja v0.0.0-20240220182346-e401ed450204
