@@ -1,7 +1,7 @@
 
-function doHttpRequest(){
+function doHttpRequest(url){
 	let client=callMethod("http","newClient");
-	return client.ExecuteTextRequest("http://134.64.116.90:8101/sso/index.html?res=workflow", "Get", "",""); 
+	return client.ExecuteTextRequest(url, "Get", "",""); 
 }
 
 /**
@@ -15,4 +15,7 @@ function callMethod( code, method, params) {
 }
 
 //console.Log(result);
-doHttpRequest()
+
+function main(url){
+	return doHttpRequest(url);
+}
