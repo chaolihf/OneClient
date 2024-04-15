@@ -1,59 +1,69 @@
 package httpClient
 
 import (
-	"io"
-	"net/http"
-	"net/http/cookiejar"
+	"crypto/tls"
 	"strings"
 
 	jjson "github.com/chaolihf/udpgo/json"
+	lang "github.com/chaolihf/udpgo/lang"
+	"github.com/go-resty/resty/v2"
+	"go.uber.org/zap"
 )
 
 type HttpClient struct {
-	client http.Client
+	client *resty.Client
+}
+
+var logger *zap.Logger
+
+func init() {
+	logger = lang.InitProductLogger("logs/windows_helper.log", 300, 3, 10)
 }
 
 func NewHttpClient() (*HttpClient, error) {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
-	}
-	client := http.Client{
-		Jar: jar,
-	}
+	client := resty.New()
 	return &HttpClient{
 		client: client,
 	}, nil
 }
 
+/*
+*
+
+	@param headers json格式的协议头
+*/
 func (httpClient *HttpClient) ExecuteTextRequest(url string, method string, content string, headers string) (string, error) {
-	var payload *strings.Reader
-	if len(content) > 0 {
-		payload = strings.NewReader(content)
-	} else {
-		payload = nil
-	}
-	req, err := http.NewRequest(method, url, payload)
-	if err != nil {
-		return "", err
-	}
+	request := httpClient.client.R()
 	if len(headers) > 0 {
 		headInfo, err := jjson.FromBytes([]byte(headers))
 		if err != nil {
 			return "", err
 		}
 		for name := range headInfo.Attributes {
-			req.Header.Set(name, headInfo.GetString(name))
+			request.SetHeader(name, headInfo.GetString(name))
 		}
 	}
-	resp, err := httpClient.client.Do(req)
+	if len(content) > 0 {
+		request.SetBody(content)
+	}
+	if strings.HasPrefix(url, "https") {
+		httpClient.client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	}
+	var response *resty.Response
+	var err error
+	switch strings.ToLower(method) {
+	case "get":
+		{
+			response, err = request.Get(url)
+			break
+		}
+	case "post":
+		{
+			response, err = request.Post(url)
+		}
+	}
 	if err != nil {
 		return "", nil
 	}
-	defer resp.Body.Close()
-	datas, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", nil
-	}
-	return string(datas), nil
+	return response.String(), nil
 }
