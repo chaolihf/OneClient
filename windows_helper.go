@@ -14,6 +14,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	runner.runCode("doHttpRequest")
+	runner.runCode("doHttpRequest")
+
 	fmt.Println(v.Export())
 }
 

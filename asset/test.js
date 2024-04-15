@@ -1,8 +1,7 @@
 
 function doHttpRequest(){
 	let client=callMethod("http","newClient");
-	//return client.ExecuteTextRequest("http://134.64.116.90:8101/sso/index.html?res=workflow", "Get", "",""); 
-	return client;
+	return client.ExecuteTextRequest("http://134.64.116.90:8101/sso/index.html?res=workflow", "Get", "",""); 
 }
 
 /**
@@ -15,6 +14,5 @@ function callMethod( code, method, params) {
     return _func_predef_proxy.CallPluginsMethod(code, method,  params);
 }
 
-var result=doHttpRequest();
-console.Log(result);
-result;
+//console.Log(result);
+doHttpRequest()
