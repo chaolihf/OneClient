@@ -5,6 +5,7 @@ go 1.21.6
 require github.com/dop251/goja v0.0.0-20240220182346-e401ed450204
 
 require (
+	github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19 // indirect
 	github.com/chaolihf/udpgo v0.0.13 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
 	github.com/gen2brain/shm v0.0.0-20230802011745-f2460f5984f7 // indirect
@@ -32,6 +33,7 @@ require (
 	github.com/vcaesar/keycode v0.10.1 // indirect
 	github.com/vcaesar/tt v0.20.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
+	gitlab.com/stone.code/assert v0.0.0-20191212205015-97cac9777adf // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/image v0.12.0 // indirect

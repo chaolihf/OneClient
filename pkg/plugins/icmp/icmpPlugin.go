@@ -2,23 +2,23 @@
 *
 @description  实现IScriptPlugin接口的http插件
 */
-package httpPlugin
+package icmpPlugin
 
 import (
 	httpClient "com.chinatelecom.oneops.client/pkg/clients/httpclient"
 )
 
-// HTTPScriptPlugin 实现了IScriptPlugin接口的HTTP插件
-type HTTPScriptPlugin struct {
+// ICMPScriptPlugin 实现了IScriptPlugin接口的ICMP插件
+type ICMPScriptPlugin struct {
 }
 
-// @return string http插件
-func (hsp HTTPScriptPlugin) GetCode() string {
-	return "http"
+// @return string icmp插件
+func (hsp ICMPScriptPlugin) GetCode() string {
+	return "icmp"
 }
 
 // CallPluginsMethod 实现IScriptPlugin接口的CallPluginsMethod方法
-func (hsp HTTPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
+func (hsp ICMPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
 	switch method {
 	case "newClient":
 		{
