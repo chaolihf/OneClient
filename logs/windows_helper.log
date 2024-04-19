@@ -1,0 +1,9 @@
+{"level":"INFO","ts":"2024-04-20T00:34:52.832+0800","caller":"utils/netUtils.go:34","msg":"Resolving target address target134.64.116.90 ip_protocol 4"}
+{"level":"INFO","ts":"2024-04-20T00:35:26.312+0800","caller":"utils/netUtils.go:66","msg":"Resolved target addresstarget134.64.116.90ip134.64.116.90"}
+{"level":"INFO","ts":"2024-04-20T00:36:26.239+0800","caller":"icmp/icmpPlugin.go:108","msg":"73.4380405 4"}
+{"level":"INFO","ts":"2024-04-20T00:36:48.560+0800","caller":"icmp/icmpPlugin.go:118","msg":"Creating socket"}
+{"level":"INFO","ts":"2024-04-20T00:38:18.426+0800","caller":"icmp/icmpPlugin.go:228","msg":"Creating ICMP packetseq21995id6732"}
+{"level":"INFO","ts":"2024-04-20T00:38:28.829+0800","caller":"icmp/icmpPlugin.go:242","msg":"Sending packetsetupTime100.7964863"}
+{"level":"INFO","ts":"2024-04-20T00:38:29.683+0800","caller":"icmp/icmpPlugin.go:243","msg":"Writing out packet"}
+{"level":"INFO","ts":"2024-04-20T00:38:55.619+0800","caller":"icmp/icmpPlugin.go:317","msg":"Waiting for reply packets"}
+{"level":"WARN","ts":"2024-04-20T00:39:11.339+0800","caller":"icmp/icmpPlugin.go:356","msg":"Timeout reading from socketerrread ip4 0.0.0.0: i/o timeout"}

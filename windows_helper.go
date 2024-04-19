@@ -24,8 +24,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	v, err := runner.runFunction("main", "http://134.64.116.90:8101/sso/index.html?res=workflow")
+	v, err := runner.runFunction("ping", "134.64.116.90")
+	fmt.Println(v.Export())
+	v, err = runner.runFunction("main", "http://134.64.116.90:8101/sso/index.html?res=workflow")
 	fmt.Println(v.Export())
 	v, err = runner.runFunction("main", "https://baidu.com")
 	fmt.Println(v.Export())

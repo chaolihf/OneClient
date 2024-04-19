@@ -19,3 +19,7 @@ function callMethod( code, method, params) {
 function main(url){
 	return doHttpRequest(url);
 }
+
+function ping(address){
+	return callMethod("icmp","ping",address);
+}
