@@ -13,7 +13,7 @@ type JSRunner struct {
 func NewJSRunner() *JSRunner {
 	vm := goja.New()
 	vm.Set("console", &console.Console{})
-	vm.Set("_func_predef_proxy", &proxy.JavascriptProxy{})
+	vm.Set("_func_predef_proxy", proxy.New())
 	return &JSRunner{
 		runtime: vm,
 	}
