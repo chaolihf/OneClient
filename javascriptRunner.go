@@ -4,16 +4,17 @@ import (
 	"com.chinatelecom.oneops.client/pkg/plugins/console"
 	"com.chinatelecom.oneops.client/pkg/plugins/proxy"
 	"github.com/dop251/goja"
+	"go.uber.org/zap"
 )
 
 type JSRunner struct {
 	runtime *goja.Runtime
 }
 
-func NewJSRunner() *JSRunner {
+func NewJSRunner(logger *zap.Logger) *JSRunner {
 	vm := goja.New()
-	vm.Set("console", &console.Console{})
-	vm.Set("_func_predef_proxy", proxy.New())
+	vm.Set("console", console.New(logger))
+	vm.Set("_func_predef_proxy", proxy.New(logger))
 	return &JSRunner{
 		runtime: vm,
 	}

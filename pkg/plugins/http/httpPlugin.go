@@ -6,10 +6,16 @@ package httpPlugin
 
 import (
 	httpClient "com.chinatelecom.oneops.client/pkg/clients/httpclient"
+	"go.uber.org/zap"
 )
 
 // HTTPScriptPlugin 实现了IScriptPlugin接口的HTTP插件
 type HTTPScriptPlugin struct {
+	logger *zap.Logger
+}
+
+func NewHTTPScriptPlugin(logger *zap.Logger) *HTTPScriptPlugin {
+	return &HTTPScriptPlugin{logger: logger}
 }
 
 // @return string http插件
@@ -31,4 +37,8 @@ func (hsp HTTPScriptPlugin) CallPluginsMethod(method string, params interface{})
 		}
 	}
 	return nil
+}
+
+func (hsp *HTTPScriptPlugin) SetLogger(logger *zap.Logger) {
+	hsp.logger = logger
 }

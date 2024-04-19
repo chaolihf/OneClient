@@ -5,16 +5,18 @@ import (
 
 	plugin "com.chinatelecom.oneops.client/pkg/plugins"
 	"github.com/modern-go/reflect2"
+	"go.uber.org/zap"
 )
 
 type JavascriptProxy struct {
 	plugins map[string]plugin.IScriptPlugin
 }
 
-func New() *JavascriptProxy {
+func New(logger *zap.Logger) *JavascriptProxy {
 	plugins := make(map[string]plugin.IScriptPlugin)
-	for _, plugin := range plugin.GetAllPlugins() {
+	for _, plugin := range plugin.GetAllPlugins(logger) {
 		plugins[plugin.GetCode()] = plugin
+		plugin.SetLogger(logger)
 	}
 	return &JavascriptProxy{
 		plugins: plugins,

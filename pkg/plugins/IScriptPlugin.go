@@ -1,5 +1,7 @@
 package plugin
 
+import "go.uber.org/zap"
+
 // IScriptPlugin 定义了一个包含CallMethod方法的接口，用于执行对服务的简单调用
 type IScriptPlugin interface {
 
@@ -13,4 +15,7 @@ type IScriptPlugin interface {
 	 * @return 返回插件方法执行结果
 	 */
 	CallPluginsMethod(method string, parmas interface{}) interface{}
+
+	// SetLogger 设置日志
+	SetLogger(logger *zap.Logger)
 }
