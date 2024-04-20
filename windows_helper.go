@@ -26,6 +26,9 @@ func main() {
 	}
 	v, err := runner.runFunction("ping", "134.64.116.90")
 	fmt.Println(v.Export())
+	v, err = runner.runFunction("robot")
+	fmt.Println(v.Export())
+
 	v, err = runner.runFunction("main", "http://134.64.116.90:8101/sso/index.html?res=workflow")
 	fmt.Println(v.Export())
 	v, err = runner.runFunction("main", "https://baidu.com")

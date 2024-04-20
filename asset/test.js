@@ -23,3 +23,7 @@ function main(url){
 function ping(address){
 	return callMethod("icmp","probe",address);
 }
+
+function robot(address){
+	return callMethod("rpa","probe",address);
+}

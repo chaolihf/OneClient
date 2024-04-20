@@ -1,6 +1,9 @@
 package plugin
 
-import "go.uber.org/zap"
+import (
+	rpaPlugin "com.chinatelecom.oneops.client/pkg/plugins/rpa"
+	"go.uber.org/zap"
+)
 
 type CustomPlugins struct {
 	logger  *zap.Logger
@@ -10,6 +13,9 @@ type CustomPlugins struct {
 func NewCustomPlugins(logger *zap.Logger) *CustomPlugins {
 	plugins := &CustomPlugins{
 		logger: logger,
+	}
+	plugins.plugins = []IScriptPlugin{
+		rpaPlugin.NewRpaScriptPlugin(logger),
 	}
 	return plugins
 }
