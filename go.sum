@@ -1,5 +1,7 @@
 github.com/BurntSushi/freetype-go v0.0.0-20160129220410-b763ddbfe298/go.mod h1:D+QujdIlUNfa0igpNMk6UIvlb6C252URs4yupRUV4lQ=
 github.com/BurntSushi/graphics-go v0.0.0-20160129215708-b43f31a4a966/go.mod h1:Mid70uvE93zn9wgF92A/r5ixgnvX8Lh68fxp9KQBaI0=
+github.com/akavel/rsrc v0.10.2 h1:Zxm8V5eI1hW4gGaYsJQUhxpjkENuG91ki8B4zCrvEsw=
+github.com/akavel/rsrc v0.10.2/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
 github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19 h1:EQqRZq7SG6pUBT4zBPrTxTuM5kzM4yJ+WaeJLpdrj4c=
 github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
 github.com/chaolihf/udpgo v0.0.13 h1:PffwmW49o/WxbYD4j1T3cw7niCmMm2GzRW1gLdIWJsU=
