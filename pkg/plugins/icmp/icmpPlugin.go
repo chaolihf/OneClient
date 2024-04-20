@@ -73,26 +73,26 @@ func NewICMPScriptPlugin(logger *zap.Logger) *ICMPScriptPlugin {
 }
 
 // @return string icmp插件
-func (this ICMPScriptPlugin) GetCode() string {
+func (thisPlugin ICMPScriptPlugin) GetCode() string {
 	return "icmp"
 }
 
 // CallPluginsMethod 实现IScriptPlugin接口的CallPluginsMethod方法
-func (this ICMPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
+func (thisPlugin ICMPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
 	switch method {
-	case "ping":
+	case "probe":
 		{
-			this.ping(params.(string))
+			thisPlugin.probe(params.(string))
 		}
 	}
 	return nil
 }
 
-func (this *ICMPScriptPlugin) SetLogger(logger *zap.Logger) {
-	this.logger = logger
+func (thisPlugin *ICMPScriptPlugin) SetLogger(logger *zap.Logger) {
+	thisPlugin.logger = logger
 }
 
-func (this *ICMPScriptPlugin) ping(target string) bool {
+func (thisPlugin *ICMPScriptPlugin) probe(target string) bool {
 	var (
 		requestType     icmp.Type
 		replyType       icmp.Type
@@ -101,15 +101,15 @@ func (this *ICMPScriptPlugin) ping(target string) bool {
 		hopLimitFlagSet bool = true
 	)
 	ctx, _ := context.WithDeadline(context.Background(),
-		time.Now().Add(time.Duration(this.Deadline)*time.Second))
+		time.Now().Add(time.Duration(thisPlugin.Deadline)*time.Second))
 
-	logger := this.logger
+	logger := thisPlugin.logger
 	dstIPAddr, lookupTime, IPProtocol, err := utils.ChooseProtocol(nil, 4, true, target, logger)
 	logger.Info(fmt.Sprint(lookupTime, IPProtocol))
 	var srcIP net.IP
-	if len(this.sourceIpAddress) > 0 {
-		if srcIP = net.ParseIP(this.sourceIpAddress); srcIP == nil {
-			logger.Info(fmt.Sprint("Error parsing source ip address", "srcIP", this.sourceIpAddress))
+	if len(thisPlugin.sourceIpAddress) > 0 {
+		if srcIP = net.ParseIP(thisPlugin.sourceIpAddress); srcIP == nil {
+			logger.Info(fmt.Sprint("Error parsing source ip address", "srcIP", thisPlugin.sourceIpAddress))
 			return false
 		}
 		logger.Info(fmt.Sprint("Using source address", "srcIP", srcIP))
@@ -160,7 +160,7 @@ func (this *ICMPScriptPlugin) ping(target string) bool {
 			srcIP = net.ParseIP("0.0.0.0")
 		}
 
-		if this.DontFragment {
+		if thisPlugin.DontFragment {
 			// If the user has set the don't fragment option we cannot use unprivileged
 			// sockets as it is not possible to set IP header level options.
 			netConn, err := net.ListenPacket("ip4:icmp", srcIP.String())
@@ -213,8 +213,8 @@ func (this *ICMPScriptPlugin) ping(target string) bool {
 	}
 
 	var data []byte
-	if this.PayloadSize != 0 {
-		data = make([]byte, this.PayloadSize)
+	if thisPlugin.PayloadSize != 0 {
+		data = make([]byte, thisPlugin.PayloadSize)
 		copy(data, "Prometheus Blackbox Exporter")
 	} else {
 		data = []byte("Prometheus Blackbox Exporter")
@@ -244,7 +244,7 @@ func (this *ICMPScriptPlugin) ping(target string) bool {
 	rttStart := time.Now()
 
 	if icmpConn != nil {
-		ttl := this.TTL
+		ttl := thisPlugin.TTL
 		if ttl > 0 {
 			if c4 := icmpConn.IPv4PacketConn(); c4 != nil {
 				logger.Debug(fmt.Sprint("Setting TTL (IPv4 unprivileged)", "ttl", ttl))
@@ -258,9 +258,9 @@ func (this *ICMPScriptPlugin) ping(target string) bool {
 		_, err = icmpConn.WriteTo(wb, dst)
 	} else {
 		ttl := DefaultICMPTTL
-		if this.TTL > 0 {
+		if thisPlugin.TTL > 0 {
 			logger.Debug(fmt.Sprint("Overriding TTL (raw IPv4)", "ttl", ttl))
-			ttl = this.TTL
+			ttl = thisPlugin.TTL
 		}
 		// Only for IPv4 raw. Needed for setting DontFragment flag.
 		header := &ipv4.Header{

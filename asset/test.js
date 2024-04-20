@@ -21,5 +21,5 @@ function main(url){
 }
 
 function ping(address){
-	return callMethod("icmp","ping",address);
+	return callMethod("icmp","probe",address);
 }

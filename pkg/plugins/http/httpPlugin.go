@@ -19,12 +19,12 @@ func NewHTTPScriptPlugin(logger *zap.Logger) *HTTPScriptPlugin {
 }
 
 // @return string http插件
-func (hsp HTTPScriptPlugin) GetCode() string {
+func (thisPlugin HTTPScriptPlugin) GetCode() string {
 	return "http"
 }
 
 // CallPluginsMethod 实现IScriptPlugin接口的CallPluginsMethod方法
-func (hsp HTTPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
+func (thisPlugin HTTPScriptPlugin) CallPluginsMethod(method string, params interface{}) interface{} {
 	switch method {
 	case "newClient":
 		{
@@ -39,6 +39,6 @@ func (hsp HTTPScriptPlugin) CallPluginsMethod(method string, params interface{})
 	return nil
 }
 
-func (hsp *HTTPScriptPlugin) SetLogger(logger *zap.Logger) {
-	hsp.logger = logger
+func (thisPlugin *HTTPScriptPlugin) SetLogger(logger *zap.Logger) {
+	thisPlugin.logger = logger
 }

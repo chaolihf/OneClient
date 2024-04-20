@@ -2,6 +2,7 @@ package httpClient
 
 import (
 	"crypto/tls"
+	"fmt"
 	"strings"
 
 	jjson "github.com/chaolihf/udpgo/json"
@@ -11,7 +12,9 @@ import (
 )
 
 type HttpClient struct {
-	client *resty.Client
+	client        *resty.Client
+	trace         bool
+	lastTraceInfo resty.TraceInfo
 }
 
 var logger *zap.Logger
@@ -24,6 +27,7 @@ func NewHttpClient() (*HttpClient, error) {
 	client := resty.New()
 	return &HttpClient{
 		client: client,
+		trace:  true,
 	}, nil
 }
 
@@ -32,8 +36,8 @@ func NewHttpClient() (*HttpClient, error) {
 
 	@param headers json格式的协议头
 */
-func (httpClient *HttpClient) ExecuteTextRequest(url string, method string, content string, headers string) (string, error) {
-	request := httpClient.client.R()
+func (thisClient *HttpClient) ExecuteTextRequest(url string, method string, content string, headers string) (string, error) {
+	request := thisClient.client.R()
 	if len(headers) > 0 {
 		headInfo, err := jjson.FromBytes([]byte(headers))
 		if err != nil {
@@ -47,8 +51,12 @@ func (httpClient *HttpClient) ExecuteTextRequest(url string, method string, cont
 		request.SetBody(content)
 	}
 	if strings.HasPrefix(url, "https") {
-		httpClient.client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+		thisClient.client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	}
+	if thisClient.trace {
+		request.EnableTrace()
+	}
+	request.EnableTrace()
 	var response *resty.Response
 	var err error
 	switch strings.ToLower(method) {
@@ -65,5 +73,13 @@ func (httpClient *HttpClient) ExecuteTextRequest(url string, method string, cont
 	if err != nil {
 		return "", nil
 	}
+	if thisClient.trace {
+		thisClient.lastTraceInfo = response.Request.TraceInfo()
+		fmt.Println(thisClient.lastTraceInfo.ConnTime.Seconds())
+	}
 	return response.String(), nil
+}
+
+func (thisClient *HttpClient) GetLastTraceInfo() resty.TraceInfo {
+	return thisClient.lastTraceInfo
 }
