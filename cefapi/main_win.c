@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "capi/cef_base.h"
-#include "capi/cef_app.h"
-#include "capi/cef_client.h"
-#include "capi/cef_life_span_handler.h"
+#include "include/cef_base.h"
+#include "include/cef_app.h"
+#include "include/cef_client.h"
+#include "include/cef_life_span_handler.h"
 
 #include "include/cef_version_win.h"
 
