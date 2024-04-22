@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "cef_version_win.h": "c"
+    },
+    "cmake.configureOnOpen": true
+}

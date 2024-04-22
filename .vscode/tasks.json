@@ -1,0 +1,42 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "compile cef api",
+            "command": "C:\\TDM-GCC-64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-c",
+                "-g",
+                "${workspaceFolder}\\cefapi\\main_win.c",
+                "-o",
+                "${workspaceFolder}\\cefapi\\cefapi.o",
+                "-L${workspaceFolder}\\Release",
+                "-lcef",
+                "-I${workspaceFolder}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        },
+        {
+            "label": "static cef api library",
+            "command": "ar",
+            "args": ["rcs","libcefapi.a","cefapi.o"],
+            "options": {
+              "cwd": "${workspaceFolder}/cefapi"
+            },
+            "dependsOn": ["compile cef api"]
+          },
+      
+    ],
+    "version": "2.0.0"
+}

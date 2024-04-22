@@ -10,6 +10,16 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}"
+        },
+        {
+            "name": "Run Test",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}",
+            "preLaunchTask": "static cef api library",
+            "output": "${workspaceFolder}/Release/",
+            "cwd": "${workspaceFolder}/Release/"
         }
 
     ]

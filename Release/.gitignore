@@ -1,0 +1,9 @@
+locales
+GPUCache
+*.pak
+*.dll
+*.bin
+*.exe
+*.lib
+*.log
+*.dat
