@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Marshall A. Greenblatt. All rights reserved.
+// Copyright (c) 2021 Marshall A. Greenblatt. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -33,7 +33,7 @@
 // by hand. See the translator.README.txt file in the tools directory for
 // more information.
 //
-// $hash=982ad223be14ddf50a61b3cf803330397349b661$
+// $hash=c8707f30655dc83c5f329d1dc22b14e9e06f4e76$
 //
 
 #ifndef CEF_INCLUDE_CAPI_VIEWS_CEF_VIEW_DELEGATE_CAPI_H_
@@ -113,6 +113,20 @@ typedef struct _cef_view_delegate_t {
                                             struct _cef_view_t* view,
                                             int added,
                                             struct _cef_view_t* child);
+
+  ///
+  // Called when |view| is added or removed from the cef_window_t.
+  ///
+  void(CEF_CALLBACK* on_window_changed)(struct _cef_view_delegate_t* self,
+                                        struct _cef_view_t* view,
+                                        int added);
+
+  ///
+  // Called when the layout of |view| has changed.
+  ///
+  void(CEF_CALLBACK* on_layout_changed)(struct _cef_view_delegate_t* self,
+                                        struct _cef_view_t* view,
+                                        const cef_rect_t* new_bounds);
 
   ///
   // Called when |view| gains focus.

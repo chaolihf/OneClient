@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Marshall A. Greenblatt. All rights reserved.
+// Copyright (c) 2021 Marshall A. Greenblatt. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -33,7 +33,7 @@
 // by hand. See the translator.README.txt file in the tools directory for
 // more information.
 //
-// $hash=979968e494e9d7c4d5117a1753acade5d0e79215$
+// $hash=067fd169a30bec1ad8eeacc5ab1ac750cf59640e$
 //
 
 #ifndef CEF_INCLUDE_CAPI_CEF_DISPLAY_HANDLER_CAPI_H_
@@ -118,6 +118,7 @@ typedef struct _cef_display_handler_t {
   ///
   int(CEF_CALLBACK* on_console_message)(struct _cef_display_handler_t* self,
                                         struct _cef_browser_t* browser,
+                                        cef_log_severity_t level,
                                         const cef_string_t* message,
                                         const cef_string_t* source,
                                         int line);
@@ -131,6 +132,28 @@ typedef struct _cef_display_handler_t {
   int(CEF_CALLBACK* on_auto_resize)(struct _cef_display_handler_t* self,
                                     struct _cef_browser_t* browser,
                                     const cef_size_t* new_size);
+
+  ///
+  // Called when the overall page loading progress has changed. |progress|
+  // ranges from 0.0 to 1.0.
+  ///
+  void(CEF_CALLBACK* on_loading_progress_change)(
+      struct _cef_display_handler_t* self,
+      struct _cef_browser_t* browser,
+      double progress);
+
+  ///
+  // Called when the browser's cursor has changed. If |type| is CT_CUSTOM then
+  // |custom_cursor_info| will be populated with the custom cursor information.
+  // Return true (1) if the cursor change was handled or false (0) for default
+  // handling.
+  ///
+  int(CEF_CALLBACK* on_cursor_change)(
+      struct _cef_display_handler_t* self,
+      struct _cef_browser_t* browser,
+      cef_cursor_handle_t cursor,
+      cef_cursor_type_t type,
+      const struct _cef_cursor_info_t* custom_cursor_info);
 } cef_display_handler_t;
 
 #ifdef __cplusplus

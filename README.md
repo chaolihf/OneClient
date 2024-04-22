@@ -9,3 +9,9 @@ rsrc -manifest main.manifest -ico client.ico -o main.syso
 
 # 调试
 启动VSCode的时候需要使用管理员权限模式运行
+
+# windows下安装
+1. 下载msys2安装包，解压到任意目录
+2. pacman -Syu
+3. pacman -Su
+4. pacman -S --needed base-devel mingw-w64-x86_64-toolchain

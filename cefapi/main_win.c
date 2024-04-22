@@ -6,12 +6,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "include/cef_base.h"
-#include "include/cef_app.h"
-#include "include/cef_client.h"
-#include "include/cef_life_span_handler.h"
-
-#include "include/cef_version_win.h"
+#include "cefapi/cef_base.h"
+#include "cefapi/cef_app.h"
+#include "cefapi/cef_client.h"
+#include "cefapi/cef_life_span_handler.h"
+#include "include/cef_version.h"
 
 #include "cefapi.h"
 
@@ -21,7 +20,6 @@ int number_add_mod(int a, int b, int mod) {
 
 // Globals
 cef_life_span_handler_t g_life_span_handler = {};
-
 
 int startCef(int argc, char** argv) {
     // This executable is called many times, because it
@@ -85,10 +83,10 @@ int startCef(int argc, char** argv) {
     window_info.style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN \
             | WS_CLIPSIBLINGS | WS_VISIBLE;
     window_info.parent_window = NULL;
-    window_info.x = CW_USEDEFAULT;
-    window_info.y = CW_USEDEFAULT;
-    window_info.width = CW_USEDEFAULT;
-    window_info.height = CW_USEDEFAULT;
+    window_info.bounds.x = CW_USEDEFAULT;
+    window_info.bounds.y = CW_USEDEFAULT;
+    window_info.bounds.width = CW_USEDEFAULT;
+    window_info.bounds.height = CW_USEDEFAULT;
 
     // Window info - window title
     char window_name[] = "cefcapi example";
@@ -116,7 +114,7 @@ int startCef(int argc, char** argv) {
     // synchronous version of this function available.
     printf("cef_browser_host_create_browser\n");
     cef_browser_host_create_browser(&window_info, &client, &cef_url,
-                                    &browser_settings, NULL);
+                                    &browser_settings, NULL,NULL);
 
     // Message loop. There is also cef_do_message_loop_work()
     // that allow for integrating with existing message loops.
@@ -135,3 +133,4 @@ int startCef(int argc, char** argv) {
 
     return 0;
 }
+

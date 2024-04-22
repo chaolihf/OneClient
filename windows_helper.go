@@ -29,7 +29,7 @@ func init() {
 func main() {
 	fmt.Println("start windows helper")
 	args := os.Args
-	if len(args) == 1 {
+	if len(args) == 0 {
 		go runTest()
 	}
 	if len(args) >= 1 {

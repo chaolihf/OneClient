@@ -35,7 +35,9 @@
 
 #if defined(OS_WIN)
 #include <windows.h>
+
 #include "include/internal/cef_string.h"
+#include "include/internal/cef_types_geometry.h"
 
 // Handle types.
 #define cef_cursor_handle_t HCURSOR
@@ -53,7 +55,9 @@ extern "C" {
 ///
 // Structure representing CefExecuteProcess arguments.
 ///
-typedef struct _cef_main_args_t { HINSTANCE instance; } cef_main_args_t;
+typedef struct _cef_main_args_t {
+  HINSTANCE instance;
+} cef_main_args_t;
 
 ///
 // Structure representing window information.
@@ -63,10 +67,7 @@ typedef struct _cef_window_info_t {
   DWORD ex_style;
   cef_string_t window_name;
   DWORD style;
-  int x;
-  int y;
-  int width;
-  int height;
+  cef_rect_t bounds;
   cef_window_handle_t parent_window;
   HMENU menu;
 
@@ -83,6 +84,19 @@ typedef struct _cef_window_info_t {
   // CefBrowserSettings.background_color to an opaque value.
   ///
   int windowless_rendering_enabled;
+
+  ///
+  // Set to true (1) to enable shared textures for windowless rendering. Only
+  // valid if windowless_rendering_enabled above is also set to true. Currently
+  // only supported on Windows (D3D11).
+  ///
+  int shared_texture_enabled;
+
+  ///
+  // Set to true (1) to enable the ability to issue BeginFrame requests from the
+  // client application by calling CefBrowserHost::SendExternalBeginFrame.
+  ///
+  int external_begin_frame_enabled;
 
   ///
   // Handle for the new browser window. Only used with windowed rendering.

@@ -1,177 +1,185 @@
-// CEF C API example
-// Project website: https://github.com/cztomczak/cefcapi
+// Copyright (c) 2012 Marshall A. Greenblatt. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of Google Inc. nor the name Chromium Embedded
+// Framework nor the names of its contributors may be used to endorse
+// or promote products derived from this software without specific prior
+// written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// ---------------------------------------------------------------------------
+//
+// The contents of this file must follow a specific format in order to
+// support the CEF translator tool. See the translator.README.txt file in the
+// tools directory for more information.
+//
 
+#ifndef CEF_INCLUDE_CEF_CLIENT_H_
+#define CEF_INCLUDE_CEF_CLIENT_H_
 #pragma once
 
-#include "cef_base.h"
-#include "cef_life_span_handler.h"
-#include "include/capi/cef_client_capi.h"
-
-extern cef_life_span_handler_t g_life_span_handler;
-
-
-// ----------------------------------------------------------------------------
-// struct cef_client_t
-// ----------------------------------------------------------------------------
-
-///
-// Implement this structure to provide handler implementations.
-///
-
-///
-// Return the handler for context menus. If no handler is
-// provided the default implementation will be used.
-///
-
-struct _cef_context_menu_handler_t* CEF_CALLBACK get_context_menu_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_context_menu_handler\n");
-    return NULL;
-}
+#include "include/cef_audio_handler.h"
+#include "include/cef_base.h"
+#include "include/cef_context_menu_handler.h"
+#include "include/cef_dialog_handler.h"
+#include "include/cef_display_handler.h"
+#include "include/cef_download_handler.h"
+#include "include/cef_drag_handler.h"
+#include "include/cef_find_handler.h"
+#include "include/cef_focus_handler.h"
+#include "include/cef_frame_handler.h"
+#include "include/cef_jsdialog_handler.h"
+#include "include/cef_keyboard_handler.h"
+#include "include/cef_life_span_handler.h"
+#include "include/cef_load_handler.h"
+#include "include/cef_print_handler.h"
+#include "include/cef_process_message.h"
+#include "include/cef_render_handler.h"
+#include "include/cef_request_handler.h"
 
 ///
-// Return the handler for dialogs. If no handler is provided the default
-// implementation will be used.
+// Implement this interface to provide handler implementations.
 ///
-struct _cef_dialog_handler_t* CEF_CALLBACK get_dialog_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_dialog_handler\n");
-    return NULL;
-}
+/*--cef(source=client,no_debugct_check)--*/
+class CefClient : public virtual CefBaseRefCounted {
+ public:
+  ///
+  // Return the handler for audio rendering events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefAudioHandler> GetAudioHandler() { return nullptr; }
 
-///
-// Return the handler for browser display state events.
-///
-struct _cef_display_handler_t* CEF_CALLBACK get_display_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_display_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for context menus. If no handler is provided the default
+  // implementation will be used.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() {
+    return nullptr;
+  }
 
-///
-// Return the handler for download events. If no handler is returned downloads
-// will not be allowed.
-///
-struct _cef_download_handler_t* CEF_CALLBACK get_download_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_download_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for dialogs. If no handler is provided the default
+  // implementation will be used.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefDialogHandler> GetDialogHandler() { return nullptr; }
 
-///
-// Return the handler for drag events.
-///
-struct _cef_drag_handler_t* CEF_CALLBACK get_drag_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_drag_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for browser display state events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() { return nullptr; }
 
-///
-// Return the handler for focus events.
-///
-struct _cef_focus_handler_t* CEF_CALLBACK get_focus_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_focus_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for download events. If no handler is returned downloads
+  // will not be allowed.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefDownloadHandler> GetDownloadHandler() { return nullptr; }
 
-///
-// Return the handler for geolocation permissions requests. If no handler is
-// provided geolocation access will be denied by default.
-///
-struct _cef_geolocation_handler_t* CEF_CALLBACK get_geolocation_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_geolocation_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for drag events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefDragHandler> GetDragHandler() { return nullptr; }
 
-///
-// Return the handler for JavaScript dialogs. If no handler is provided the
-// default implementation will be used.
-///
-struct _cef_jsdialog_handler_t* CEF_CALLBACK get_jsdialog_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_jsdialog_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for find result events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefFindHandler> GetFindHandler() { return nullptr; }
 
-///
-// Return the handler for keyboard events.
-///
-struct _cef_keyboard_handler_t* CEF_CALLBACK get_keyboard_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_keyboard_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for focus events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefFocusHandler> GetFocusHandler() { return nullptr; }
 
-///
-// Return the handler for browser life span events.
-///
-struct _cef_life_span_handler_t* CEF_CALLBACK get_life_span_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_life_span_handler\n");
-    // Implemented!
-    return &g_life_span_handler;
-}
+  ///
+  // Return the handler for events related to CefFrame lifespan. This method
+  // will be called once during CefBrowser creation and the result will be
+  // cached for performance reasons.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefFrameHandler> GetFrameHandler() { return nullptr; }
 
-///
-// Return the handler for browser load status events.
-///
-struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_load_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for JavaScript dialogs. If no handler is provided the
+  // default implementation will be used.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() { return nullptr; }
 
-///
-// Return the handler for off-screen rendering events.
-///
-struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_render_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for keyboard events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() { return nullptr; }
 
-///
-// Return the handler for browser request events.
-///
-struct _cef_request_handler_t* CEF_CALLBACK get_request_handler(
-        struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_request_handler\n");
-    return NULL;
-}
+  ///
+  // Return the handler for browser life span events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() { return nullptr; }
 
-///
-// Called when a new message is received from a different process. Return true
-// (1) if the message was handled or false (0) otherwise. Do not keep a
-// reference to or attempt to access the message outside of this callback.
-///
-int CEF_CALLBACK on_process_message_received(
-        struct _cef_client_t* self,
-        struct _cef_browser_t* browser, cef_process_id_t source_process,
-        struct _cef_process_message_t* message) {
-    DEBUG_CALLBACK("on_process_message_received\n");
-    return 0;
-}
+  ///
+  // Return the handler for browser load status events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefLoadHandler> GetLoadHandler() { return nullptr; }
 
-void initialize_cef_client(cef_client_t* client) {
-    DEBUG_CALLBACK("initialize_client_handler\n");
-    client->base.size = sizeof(cef_client_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)client);
-    // callbacks
-    client->get_context_menu_handler = get_context_menu_handler;
-    client->get_dialog_handler = get_dialog_handler;
-    client->get_display_handler = get_display_handler;
-    client->get_download_handler = get_download_handler;
-    client->get_drag_handler = get_drag_handler;
-    client->get_focus_handler = get_focus_handler;
-    client->get_geolocation_handler = get_geolocation_handler;
-    client->get_jsdialog_handler = get_jsdialog_handler;
-    client->get_keyboard_handler = get_keyboard_handler;
-    client->get_life_span_handler = get_life_span_handler;  // Implemented!
-    client->get_load_handler = get_load_handler;
-    client->get_render_handler = get_render_handler;
-    client->get_request_handler = get_request_handler;
-    client->on_process_message_received = on_process_message_received;
-}
+  ///
+  // Return the handler for printing on Linux. If a print handler is not
+  // provided then printing will not be supported on the Linux platform.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefPrintHandler> GetPrintHandler() { return nullptr; }
+
+  ///
+  // Return the handler for off-screen rendering events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefRenderHandler> GetRenderHandler() { return nullptr; }
+
+  ///
+  // Return the handler for browser request events.
+  ///
+  /*--cef()--*/
+  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() { return nullptr; }
+
+  ///
+  // Called when a new message is received from a different process. Return true
+  // if the message was handled or false otherwise.  It is safe to keep a
+  // reference to |message| outside of this callback.
+  ///
+  /*--cef()--*/
+  virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                        CefRefPtr<CefFrame> frame,
+                                        CefProcessId source_process,
+                                        CefRefPtr<CefProcessMessage> message) {
+    return false;
+  }
+};
+
+#endif  // CEF_INCLUDE_CEF_CLIENT_H_
