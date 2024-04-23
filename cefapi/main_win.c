@@ -20,10 +20,11 @@ int number_add_mod(int a, int b, int mod) {
 
 // Globals
 cef_life_span_handler_t g_life_span_handler = {};
-
+#ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);
 }
+#endif
 int startCef(int argc, char** argv) {
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
@@ -74,6 +75,7 @@ int startCef(int argc, char** argv) {
     // "size" member.
     cef_settings_t settings = {};
     //不知道为什么在3版本中直接计算sizeof大小，但在最新版本中需要减去16来计算大小；
+    //don't known why should substrace 16 byte for size,otherwise will cause invalid settings->[base.]size
     settings.size = sizeof(cef_settings_t)-16;
     settings.log_severity = LOGSEVERITY_VERBOSE; // Show only warnings/errors
     settings.no_sandbox = 1;

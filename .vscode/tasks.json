@@ -43,6 +43,7 @@
             "label": "generate c program",
             "command": "C:\\msys64\\mingw64\\bin\\gcc.exe",
             "args": [
+                "-D windowsapp=1",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${workspaceFolder}\\cefapi\\main_win.c",
