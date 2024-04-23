@@ -6,5 +6,5 @@
         "cef_app_capi.h": "c",
         "cef_life_span_handler_capi.h": "c"
     },
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
 }

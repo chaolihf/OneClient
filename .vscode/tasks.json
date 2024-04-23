@@ -38,7 +38,32 @@
             },
             "dependsOn": ["compile cef api"]
           },
-      
+          {
+            "type": "cppbuild",
+            "label": "generate c program",
+            "command": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}\\cefapi\\main_win.c",
+                "-o",
+                "${workspaceFolder}\\Release\\windowshelper.exe",
+                "-L${workspaceFolder}\\Release",
+                "-lcef",
+                "-I${workspaceFolder}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
     ],
     "version": "2.0.0"
 }

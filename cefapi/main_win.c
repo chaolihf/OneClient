@@ -21,6 +21,9 @@ int number_add_mod(int a, int b, int mod) {
 // Globals
 cef_life_span_handler_t g_life_span_handler = {};
 
+int main(int argc, char** argv) {
+    return startCef(argc, argv);
+}
 int startCef(int argc, char** argv) {
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
@@ -66,18 +69,22 @@ int startCef(int argc, char** argv) {
     if (code >= 0) {
         _exit(code);
     }
-    
+    int result;
     // Application settings. It is mandatory to set the
     // "size" member.
     cef_settings_t settings = {};
-    settings.size = sizeof(cef_settings_t);
-    settings.log_severity = LOGSEVERITY_WARNING; // Show only warnings/errors
+    //不知道为什么在3版本中直接计算sizeof大小，但在最新版本中需要减去16来计算大小；
+    settings.size = sizeof(cef_settings_t)-16;
+    settings.log_severity = LOGSEVERITY_VERBOSE; // Show only warnings/errors
     settings.no_sandbox = 1;
 
     // Initialize CEF
     printf("cef_initialize\n");
-    cef_initialize(&main_args, &settings, &app, NULL);
-
+    result=cef_initialize(&main_args, &settings, &app, NULL);
+    if(result==0){
+        printf("cef_initialize failed\n");
+        return 0;
+    }
     // Window info
     cef_window_info_t window_info = {};
     window_info.style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN \
@@ -103,7 +110,7 @@ int startCef(int argc, char** argv) {
     // Browser settings. It is mandatory to set the
     // "size" member.
     cef_browser_settings_t browser_settings = {};
-    browser_settings.size = sizeof(cef_browser_settings_t);
+    browser_settings.size = sizeof(cef_browser_settings_t)-16;
     
     // Client handlers
     cef_client_t client = {};
@@ -113,9 +120,13 @@ int startCef(int argc, char** argv) {
     // Create browser asynchronously. There is also a
     // synchronous version of this function available.
     printf("cef_browser_host_create_browser\n");
-    cef_browser_host_create_browser(&window_info, &client, &cef_url,
+    result=cef_browser_host_create_browser(&window_info, &client, &cef_url,
                                     &browser_settings, NULL,NULL);
-
+    if(result==0)
+    {
+        printf("cef_browser_host_create_browser failed\n");
+        return 0;
+    }
     // Message loop. There is also cef_do_message_loop_work()
     // that allow for integrating with existing message loops.
     // On Windows for best performance you should set

@@ -149,11 +149,14 @@ struct _cef_request_handler_t* CEF_CALLBACK get_request_handler(
 ///
 int CEF_CALLBACK on_process_message_received(
         struct _cef_client_t* self,
-        struct _cef_browser_t* browser, cef_process_id_t source_process,
+        struct _cef_browser_t* browser, 
+        struct _cef_frame_t* frame,
+        cef_process_id_t source_process,
         struct _cef_process_message_t* message) {
     DEBUG_CALLBACK("on_process_message_received\n");
     return 0;
 }
+
 
 void initialize_cef_client(cef_client_t* client) {
     DEBUG_CALLBACK("initialize_client_handler\n");
@@ -173,5 +176,5 @@ void initialize_cef_client(cef_client_t* client) {
     client->get_load_handler = get_load_handler;
     client->get_render_handler = get_render_handler;
     client->get_request_handler = get_request_handler;
-    //client->on_process_message_received = on_process_message_received;
+    client->on_process_message_received = on_process_message_received;
 }
