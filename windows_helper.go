@@ -17,8 +17,8 @@ func init() {
 }
 
 func main() {
-	fmt.Println("start windows helper")
 	args := os.Args
+	fmt.Println("start windows helper ", args)
 	if len(args) == 1 {
 		ui.ShowMain(logger)
 	} else {

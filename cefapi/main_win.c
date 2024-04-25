@@ -13,6 +13,7 @@
 #include "include/cef_version.h"
 
 #include "cefapi.h"
+#include "utils.h"
 
 int number_add_mod(int a, int b, int mod) {
     return (a+b)%mod;
@@ -98,16 +99,10 @@ int startCef(int argc, char** argv) {
     window_info.bounds.height = CW_USEDEFAULT;
 
     // Window info - window title
-    char window_name[] = "cefcapi example";
-    cef_string_t cef_window_name = {};
-    cef_string_utf8_to_utf16(window_name, strlen(window_name),
-                             &cef_window_name);
-    window_info.window_name = cef_window_name;
+    window_info.window_name = getCefString("cefcapi example");
 
     // Initial url
-    char url[] = "http://baidu.com";
-    cef_string_t cef_url = {};
-    cef_string_utf8_to_utf16(url, strlen(url), &cef_url);
+    cef_string_t cef_url = getCefString("http://baidu.com");
 
     // Browser settings. It is mandatory to set the
     // "size" member.
