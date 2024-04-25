@@ -1,4 +1,4 @@
-package main
+package robot
 
 import (
 	"com.chinatelecom.oneops.client/pkg/plugins/console"

@@ -4,40 +4,69 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
+	"com.chinatelecom.oneops.client/pkg/robot"
 	"github.com/chaolihf/goey"
 	"github.com/chaolihf/goey/base"
 	"github.com/chaolihf/goey/loop"
 	"github.com/chaolihf/goey/windows"
 	"github.com/getlantern/systray"
+	"go.uber.org/zap"
 )
 
 //go:embed client.ico
 var icoData []byte
 
 var (
-	window *windows.Window
+	window               *windows.Window
+	windowCreatedChannel chan string
+	logger               *zap.Logger
 )
 
-func ShowMain() {
+func ShowMain(rootLogger *zap.Logger) string {
+	logger = rootLogger
+	windowCreatedChannel = make(chan string)
+	go func() {
+		err := loop.Run(createWindow)
+		if err != nil {
+			fmt.Println("Error: ", err)
+			windowCreatedChannel <- ""
+		}
+	}()
+	windowHwnd := <-windowCreatedChannel
 	systray.Run(onReady, onExit)
-	err := loop.Run(createWindow)
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
+	return windowHwnd
+
 }
 
 func onReady() {
 	systray.SetIcon(icoData)
 	systray.SetTitle("WindowsHelper")
 	systray.SetTooltip("客户端助理")
+	openMenuItem := systray.AddMenuItem("打开", "打开设置")
+	mockMenuItem := systray.AddMenuItem("拨测", "网络应用测试")
 	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
+
 	go func() {
-		<-quitMenuItem.ClickedCh
-		systray.Quit()
-		os.Exit(0)
+		select {
+		case <-quitMenuItem.ClickedCh:
+			systray.Quit()
+			os.Exit(0)
+		case <-openMenuItem.ClickedCh:
+			showSettingWindow()
+		case <-mockMenuItem.ClickedCh:
+			runRobotTest()
+		}
 	}()
+}
+
+func runRobotTest() {
+	robot.RunScript(logger)
+}
+func showSettingWindow() {
+	go StartCefWindow()
 }
 
 func onExit() {
@@ -51,6 +80,7 @@ func createWindow() error {
 	}
 	w.SetScroll(false, true)
 	window = w
+	windowCreatedChannel <- strconv.Itoa(int(w.NativeHandle()))
 	return nil
 }
 
