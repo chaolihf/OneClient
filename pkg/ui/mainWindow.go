@@ -1,25 +1,49 @@
 package ui
 
 import (
+	_ "embed"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/chaolihf/goey"
 	"github.com/chaolihf/goey/base"
 	"github.com/chaolihf/goey/loop"
 	"github.com/chaolihf/goey/windows"
+	"github.com/getlantern/systray"
 )
+
+//go:embed client.ico
+var icoData []byte
 
 var (
 	window *windows.Window
 )
 
 func ShowMain() {
+	systray.Run(onReady, onExit)
 	err := loop.Run(createWindow)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
 }
+
+func onReady() {
+	systray.SetIcon(icoData)
+	systray.SetTitle("WindowsHelper")
+	systray.SetTooltip("客户端助理")
+	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
+	go func() {
+		<-quitMenuItem.ClickedCh
+		systray.Quit()
+		os.Exit(0)
+	}()
+}
+
+func onExit() {
+	// clean up here
+}
+
 func createWindow() error {
 	w, err := windows.NewWindow("Controls", renderWindow())
 	if err != nil {

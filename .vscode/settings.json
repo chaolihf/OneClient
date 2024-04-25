@@ -4,7 +4,10 @@
         "atomic": "cpp",
         "cef_life_span_handler.h": "c",
         "cef_app_capi.h": "c",
-        "cef_life_span_handler_capi.h": "c"
+        "cef_life_span_handler_capi.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c"
     },
     "cmake.configureOnOpen": true,
 }

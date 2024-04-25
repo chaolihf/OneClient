@@ -29,7 +29,7 @@ func init() {
 func main() {
 	fmt.Println("start windows helper")
 	args := os.Args
-	if len(args) == 0 {
+	if len(args) == 1 {
 		go runTest()
 	}
 	if len(args) >= 1 {
@@ -43,6 +43,7 @@ func main() {
 }
 
 func runTest() {
+	ui.ShowMain()
 	runner := NewJSRunner(logger)
 	source := readData("../asset/test.js")
 	_, err := runner.runCode(source)
@@ -59,7 +60,6 @@ func runTest() {
 	fmt.Println(v.Export())
 	v, err = runner.runFunction("main", "https://baidu.com")
 	fmt.Println(v.Export())
-	ui.ShowMain()
 }
 
 func readData(source string) string {
