@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/bramvdbogaerde/go-scp v1.4.0
-	github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19
+	github.com/chaolihf/goey v0.9.1-0.20240426140259-eb09e5d03ace
 	github.com/chaolihf/udpgo v0.0.13
 	github.com/dop251/goja v0.0.0-20240220182346-e401ed450204
 	github.com/go-resty/resty/v2 v2.12.0

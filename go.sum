@@ -6,6 +6,8 @@ github.com/bramvdbogaerde/go-scp v1.4.0 h1:jKMwpwCbcX1KyvDbm/PDJuXcMuNVlLGi0Q0re
 github.com/bramvdbogaerde/go-scp v1.4.0/go.mod h1:on2aH5AxaFb2G0N5Vsdy6B0Ml7k9HuHSwfo1y0QzAbQ=
 github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19 h1:EQqRZq7SG6pUBT4zBPrTxTuM5kzM4yJ+WaeJLpdrj4c=
 github.com/chaolihf/goey v0.9.1-0.20240419053829-25ad4ca65c19/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
+github.com/chaolihf/goey v0.9.1-0.20240426140259-eb09e5d03ace h1:hg4UcCn0bXkI8WimCHe177/G37dN0/ihZNzzpBVXr1I=
+github.com/chaolihf/goey v0.9.1-0.20240426140259-eb09e5d03ace/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
 github.com/chaolihf/udpgo v0.0.13 h1:PffwmW49o/WxbYD4j1T3cw7niCmMm2GzRW1gLdIWJsU=
 github.com/chaolihf/udpgo v0.0.13/go.mod h1:+MgC8ewxYznU81AmQqGz7Xp5X1M27AJEN4WKjBM9kkw=
 github.com/chzyer/logex v1.2.0/go.mod h1:9+9sk7u7pGNWYMkh0hdiL++6OeibzJccyQU4p4MedaY=

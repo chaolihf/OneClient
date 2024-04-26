@@ -10,6 +10,8 @@ import "C"
 import (
 	"os"
 	"unsafe"
+
+	"github.com/lxn/win"
 )
 
 var isInit bool = false
@@ -26,6 +28,10 @@ func StartCefWindow(title string, url string) {
 		C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 	}
 	if len(url) > 0 {
-		C.createBrowser(C.CString(title), C.CString(url))
+		C.createBrowser(C.CString(title), C.CString(url), 0)
 	}
+}
+
+func createBrowser(title, url string, parent win.HWND) {
+	C.createBrowser(C.CString(title), C.CString(url), C.int(int(uintptr(parent))))
 }

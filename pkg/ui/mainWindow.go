@@ -35,6 +35,7 @@ func onReady() {
 	systray.SetTitle("WindowsHelper")
 	systray.SetTooltip("客户端助理")
 	mainPageMenuItem := systray.AddMenuItem("首页", "首页")
+	browserMenuItem := systray.AddMenuItem("安全浏览器", "浏览器")
 	settingMenuItem := systray.AddMenuItem("设置", "打开设置")
 	mockMenuItem := systray.AddMenuItem("拨测", "网络应用测试")
 	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
@@ -50,9 +51,30 @@ func onReady() {
 				runRobotTest()
 			case <-mainPageMenuItem.ClickedCh:
 				showMainWindow()
+			case <-browserMenuItem.ClickedCh:
+				showBrowserWinddow()
 			}
 		}
 	}()
+}
+
+func showBrowserWinddow() {
+	go func() {
+		err := loop.Run(createBrowserWindow)
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+	}()
+}
+
+func createBrowserWindow() error {
+	w, err := windows.NewWindow("Browser", nil)
+	if err != nil {
+		return err
+	}
+	w.SetScroll(false, true)
+	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle())
+	return nil
 }
 
 func showSettingWindow() {
@@ -86,6 +108,7 @@ func createWindow() error {
 	w.SetScroll(false, true)
 	window = w
 	windowCreatedChannel <- strconv.Itoa(int(w.NativeHandle()))
+
 	return nil
 }
 

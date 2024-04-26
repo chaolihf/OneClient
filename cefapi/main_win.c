@@ -99,7 +99,7 @@ int startCef(int argc, char** argv) {
     // Client handlers
     initialize_cef_client(&g_client);
     initialize_cef_life_span_handler(&g_life_span_handler);
-    createBrowser("baidu","http://baidu.com");
+    createBrowser("baidu","http://baidu.com",0);
     return 0;
 }
 
@@ -110,20 +110,27 @@ void shutdownCef(){
     cef_shutdown();
 }
 
-int createBrowser(const char * title,const char * url){
+int createBrowser(const char * title,const char * url,int parent_window_handle){
     // Window info
     cef_window_info_t window_info = {};
-    window_info.style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN \
-            | WS_CLIPSIBLINGS | WS_VISIBLE;
+    window_info.style =  WS_CLIPCHILDREN \
+            | WS_CLIPSIBLINGS | WS_VISIBLE ;
+    if(parent_window_handle!=0){
+        window_info.style=window_info.style | WS_CHILD |
+        WS_OVERLAPPED | WS_THICKFRAME;
+    }
+    else {
+        window_info.style=window_info.style | WS_OVERLAPPEDWINDOW ;
+    }
     window_info.parent_window = NULL;
     window_info.bounds.x = CW_USEDEFAULT;
     window_info.bounds.y = CW_USEDEFAULT;
-    window_info.bounds.width = CW_USEDEFAULT;
-    window_info.bounds.height = CW_USEDEFAULT;
+    window_info.bounds.width = 600;
+    window_info.bounds.height = 600;
 
     // Window info - window title
     window_info.window_name = getCefString(title);
-
+    window_info.parent_window=(HWND)(intptr_t)parent_window_handle;
     // Initial url
     cef_string_t cef_url = getCefString(url);
 
