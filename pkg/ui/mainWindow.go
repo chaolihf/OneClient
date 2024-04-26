@@ -71,7 +71,7 @@ func runRobotTest() {
 	robot.RunScript(logger)
 }
 func showMainWindow() {
-	go StartCefWindow()
+	go StartCefWindow("百度", "http://baidu.com")
 }
 
 func onExit() {

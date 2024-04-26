@@ -22,6 +22,6 @@ func main() {
 	if len(args) == 1 {
 		ui.ShowMain(logger)
 	} else {
-		ui.StartCefWindow()
+		ui.StartCefWindow("", "")
 	}
 }

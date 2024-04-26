@@ -12,12 +12,20 @@ import (
 	"unsafe"
 )
 
-func StartCefWindow() {
+var isInit bool = false
+
+func StartCefWindow(title string, url string) {
 	args := os.Args
 	argc := C.int(len(args))
 	argv := make([]*C.char, argc)
 	for i, arg := range args {
 		argv[i] = C.CString(arg)
 	}
-	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
+	if !isInit {
+		isInit = true
+		C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
+	}
+	if len(url) > 0 {
+		C.createBrowser(C.CString(title), C.CString(url))
+	}
 }

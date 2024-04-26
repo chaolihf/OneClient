@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <stdbool.h>
 #include "cefapi/cef_base.h"
 #include "cefapi/cef_app.h"
 #include "cefapi/cef_client.h"
@@ -14,6 +14,10 @@
 
 #include "cefapi.h"
 #include "utils.h"
+
+cef_client_t g_client={};
+cef_browser_settings_t g_browser_settings = {};
+bool isStartMessageLoop=false;
 
 int number_add_mod(int a, int b, int mod) {
     return (a+b)%mod;
@@ -88,6 +92,25 @@ int startCef(int argc, char** argv) {
         printf("cef_initialize failed\n");
         return 0;
     }
+    // Browser settings. It is mandatory to set the
+    // "size" member.
+    g_browser_settings.size = sizeof(cef_browser_settings_t)-16;
+    
+    // Client handlers
+    initialize_cef_client(&g_client);
+    initialize_cef_life_span_handler(&g_life_span_handler);
+    createBrowser("baidu","http://baidu.com");
+    return 0;
+}
+
+
+void shutdownCef(){
+    // Shutdown CEF
+    printf("cef_shutdown\n");
+    cef_shutdown();
+}
+
+int createBrowser(const char * title,const char * url){
     // Window info
     cef_window_info_t window_info = {};
     window_info.style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN \
@@ -99,46 +122,38 @@ int startCef(int argc, char** argv) {
     window_info.bounds.height = CW_USEDEFAULT;
 
     // Window info - window title
-    window_info.window_name = getCefString("cefcapi example");
+    window_info.window_name = getCefString(title);
 
     // Initial url
-    cef_string_t cef_url = getCefString("http://baidu.com");
-
-    // Browser settings. It is mandatory to set the
-    // "size" member.
-    cef_browser_settings_t browser_settings = {};
-    browser_settings.size = sizeof(cef_browser_settings_t)-16;
-    
-    // Client handlers
-    cef_client_t client = {};
-    initialize_cef_client(&client);
-    initialize_cef_life_span_handler(&g_life_span_handler);
+    cef_string_t cef_url = getCefString(url);
 
     // Create browser asynchronously. There is also a
     // synchronous version of this function available.
     printf("cef_browser_host_create_browser\n");
-    result=cef_browser_host_create_browser(&window_info, &client, &cef_url,
-                                    &browser_settings, NULL,NULL);
+    int result=cef_browser_host_create_browser(&window_info, &g_client, &cef_url,
+                                    &g_browser_settings, NULL,NULL);
     if(result==0)
     {
         printf("cef_browser_host_create_browser failed\n");
         return 0;
     }
-    // Message loop. There is also cef_do_message_loop_work()
-    // that allow for integrating with existing message loops.
-    // On Windows for best performance you should set
-    // cef_settings_t.multi_threaded_message_loop to true.
-    // Note however that when you do that CEF UI thread is no
-    // more application main thread and using CEF API is more
-    // difficult and require using functions like cef_post_task
-    // for running tasks on CEF UI thread.
-    printf("cef_run_message_loop\n");
-    cef_run_message_loop();
-
-    // Shutdown CEF
-    printf("cef_shutdown\n");
-    cef_shutdown();
-
-    return 0;
+    else{
+        if (!isStartMessageLoop){
+            isStartMessageLoop=true;
+            // Message loop. There is also cef_do_message_loop_work()
+            // that allow for integrating with existing message loops.
+            // On Windows for best performance you should set
+            // cef_settings_t.multi_threaded_message_loop to true.
+            // Note however that when you do that CEF UI thread is no
+            // more application main thread and using CEF API is more
+            // difficult and require using functions like cef_post_task
+            // for running tasks on CEF UI thread.
+            printf("cef_run_message_loop\n");
+            cef_run_message_loop();
+        }
+        return 1;
+    }
+    
 }
+
 

@@ -7,7 +7,9 @@
         "cef_life_span_handler_capi.h": "c",
         "array": "c",
         "string_view": "c",
-        "initializer_list": "c"
+        "initializer_list": "c",
+        "cef_base.h": "c",
+        "cef_client.h": "c"
     },
     "cmake.configureOnOpen": true,
 }
