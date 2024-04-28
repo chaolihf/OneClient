@@ -20,8 +20,9 @@ func main() {
 	args := os.Args
 	fmt.Println("start windows helper ", args)
 	if len(args) == 1 {
+		go ui.InitCef()
 		ui.ShowMain(logger)
 	} else {
-		ui.StartCefWindow("", "")
+		ui.InitCef()
 	}
 }

@@ -19,8 +19,10 @@ cef_client_t g_client={};
 cef_browser_settings_t g_browser_settings = {};
 bool isStartMessageLoop=false;
 
+int globalValue=0;
 int number_add_mod(int a, int b, int mod) {
-    return (a+b)%mod;
+    globalValue++;
+    return (a+b)%mod+globalValue;
 }
 
 // Globals
@@ -99,7 +101,20 @@ int startCef(int argc, char** argv) {
     // Client handlers
     initialize_cef_client(&g_client);
     initialize_cef_life_span_handler(&g_life_span_handler);
-    createBrowser("baidu","http://baidu.com",0);
+    //createBrowser("baidu","http://baidu.com",0);
+    if (!isStartMessageLoop){
+        isStartMessageLoop=true;
+        // Message loop. There is also cef_do_message_loop_work()
+        // that allow for integrating with existing message loops.
+        // On Windows for best performance you should set
+        // cef_settings_t.multi_threaded_message_loop to true.
+        // Note however that when you do that CEF UI thread is no
+        // more application main thread and using CEF API is more
+        // difficult and require using functions like cef_post_task
+        // for running tasks on CEF UI thread.
+        printf("cef_run_message_loop\n");
+        cef_run_message_loop();
+    }
     return 0;
 }
 

@@ -4,7 +4,6 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	"com.chinatelecom.oneops.client/pkg/robot"
@@ -20,9 +19,8 @@ import (
 var icoData []byte
 
 var (
-	window               *windows.Window
-	windowCreatedChannel chan string
-	logger               *zap.Logger
+	logger    *zap.Logger
+	runUILoop bool = false
 )
 
 func ShowMain(rootLogger *zap.Logger) {
@@ -38,7 +36,9 @@ func onReady() {
 	browserMenuItem := systray.AddMenuItem("安全浏览器", "浏览器")
 	settingMenuItem := systray.AddMenuItem("设置", "打开设置")
 	mockMenuItem := systray.AddMenuItem("拨测", "网络应用测试")
+	testMenuItem := systray.AddMenuItem("测试", "测试")
 	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
+
 	go func() {
 		for {
 			select {
@@ -52,18 +52,27 @@ func onReady() {
 			case <-mainPageMenuItem.ClickedCh:
 				showMainWindow()
 			case <-browserMenuItem.ClickedCh:
-				showBrowserWinddow()
+				showBrowserWindow()
+			case <-testMenuItem.ClickedCh:
+				TestMenuItem()
 			}
 		}
 	}()
 }
 
-func showBrowserWinddow() {
+func showBrowserWindow() {
 	go func() {
-		err := loop.Run(createBrowserWindow)
-		if err != nil {
-			fmt.Println("Error: ", err)
+		if runUILoop {
+			createBrowserWindow()
+		} else {
+			runUILoop = true
+			err := loop.Run(createBrowserWindow)
+			if err != nil {
+				runUILoop = false
+				fmt.Println("Error: ", err)
+			}
 		}
+
 	}()
 }
 
@@ -78,22 +87,24 @@ func createBrowserWindow() error {
 }
 
 func showSettingWindow() {
-	windowCreatedChannel = make(chan string)
 	go func() {
-		err := loop.Run(createWindow)
-		if err != nil {
-			fmt.Println("Error: ", err)
-			windowCreatedChannel <- ""
+		if runUILoop {
+			createWindow()
+		} else {
+			runUILoop = true
+			err := loop.Run(createWindow)
+			if err != nil {
+				runUILoop = false
+				fmt.Println("Error: ", err)
+			}
 		}
 	}()
-	windowHwnd := <-windowCreatedChannel
-	fmt.Println(windowHwnd)
 }
 func runRobotTest() {
 	robot.RunScript(logger)
 }
 func showMainWindow() {
-	go StartCefWindow("百度", "http://baidu.com")
+	createBrowser("百度", "http://baidu.com", 0)
 }
 
 func onExit() {
@@ -106,15 +117,7 @@ func createWindow() error {
 		return err
 	}
 	w.SetScroll(false, true)
-	window = w
-	windowCreatedChannel <- strconv.Itoa(int(w.NativeHandle()))
-
 	return nil
-}
-
-func updateWindow() {
-	window.SetChild(renderWindow())
-
 }
 
 func renderWindow() base.Widget {

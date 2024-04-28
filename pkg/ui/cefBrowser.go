@@ -14,22 +14,18 @@ import (
 	"github.com/lxn/win"
 )
 
-var isInit bool = false
+func TestMenuItem() {
+	createBrowser("aaa", "http://www.sina.com.cn", 0)
+}
 
-func StartCefWindow(title string, url string) {
+func InitCef() {
 	args := os.Args
 	argc := C.int(len(args))
 	argv := make([]*C.char, argc)
 	for i, arg := range args {
 		argv[i] = C.CString(arg)
 	}
-	if !isInit {
-		isInit = true
-		C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
-	}
-	if len(url) > 0 {
-		C.createBrowser(C.CString(title), C.CString(url), 0)
-	}
+	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 
 func createBrowser(title, url string, parent win.HWND) {
