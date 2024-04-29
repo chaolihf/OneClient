@@ -9,7 +9,14 @@
         "string_view": "c",
         "initializer_list": "c",
         "cef_base.h": "c",
-        "cef_client.h": "c"
+        "cef_client.h": "c",
+        "cef_load_handler.h": "c",
+        "cef_load_handler_capi.h": "c",
+        "string.h": "c",
+        "cef_base_capi.h": "c",
+        "xlocale": "c",
+        "cef_string.h": "c",
+        "cef_client_capi.h": "c"
     },
     "cmake.configureOnOpen": true,
 }

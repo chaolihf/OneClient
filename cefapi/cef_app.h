@@ -5,6 +5,7 @@
 
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
+extern cef_render_process_handler_t g_cef_render_process_handler;
 
 // ----------------------------------------------------------------------------
 // cef_app_t
@@ -73,7 +74,7 @@ struct _cef_browser_process_handler_t*
 struct _cef_render_process_handler_t*
         CEF_CALLBACK get_render_process_handler(struct _cef_app_t* self) {
     DEBUG_CALLBACK("get_render_process_handler\n");
-    return NULL;
+    return &g_cef_render_process_handler;
 }
 
 void initialize_cef_app(cef_app_t* app) {

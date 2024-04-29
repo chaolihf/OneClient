@@ -1,8 +1,36 @@
-
+#ifndef COMMON_UTILS_H
+#define COMMON_UTILS_H
 #include <string.h>
+#include "include/capi/cef_base_capi.h"
+#include <stdio.h>
 
 cef_string_t getCefString(const char *utf8String){
     cef_string_t cefString = {};
     cef_string_utf8_to_utf16(utf8String, strlen(utf8String),&cefString);
     return cefString;
 }
+
+// char* ConvertCefStringToChar(cef_string_userfree_t source) {
+    
+//   if (source && source->length > 0 && source->str) {
+//     cef_string_userfree_wide_t wide_str = {};
+//     cef_string_utf16_to_wide(source->str, source->length, wide_str);
+//     wide_str.
+//     cef_string_userfree_free(source);
+    
+//     // 获取source的长度（以字符为单位）
+//     size_t length = (size_t)source->length;
+
+//     // 分配足够大小的char*缓冲区
+//     char* result = (char*)malloc((length + 1) * sizeof(char));
+
+//     // 将cef_string复制到char*缓冲区中
+//     strncpy(result, source->str, length);
+//     result[length] = '\0'; // 确保以null终止
+
+//     return result;
+//   }
+
+//   return NULL;
+// }
+#endif

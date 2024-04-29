@@ -37,10 +37,65 @@ void CEF_CALLBACK on_before_close(struct _cef_life_span_handler_t* self,
     cef_quit_message_loop();
 }
 
+///
+// Called after a new browser is created. It is now safe to begin performing
+// actions with |browser|. cef_frame_handler_t callbacks related to initial
+// main frame creation will arrive before this callback. See
+// cef_frame_handler_t documentation for additional usage information.
+///
+void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
+                                    struct _cef_browser_t* browser){
+    DEBUG_CALLBACK("on_after_created\n");    
+}
+
+///
+  // Called on the UI thread before a new popup browser is created. The
+  // |browser| and |frame| values represent the source of the popup request. The
+  // |target_url| and |target_frame_name| values indicate where the popup
+  // browser should navigate and may be NULL if not specified with the request.
+  // The |target_disposition| value indicates where the user intended to open
+  // the popup (e.g. current tab, new tab, etc). The |user_gesture| value will
+  // be true (1) if the popup was opened via explicit user gesture (e.g.
+  // clicking a link) or false (0) if the popup opened automatically (e.g. via
+  // the DomContentLoaded event). The |popupFeatures| structure contains
+  // additional information about the requested popup window. To allow creation
+  // of the popup browser optionally modify |windowInfo|, |client|, |settings|
+  // and |no_javascript_access| and return false (0). To cancel creation of the
+  // popup browser return true (1). The |client| and |settings| values will
+  // default to the source browser's values. If the |no_javascript_access| value
+  // is set to false (0) the new browser will not be scriptable and may not be
+  // hosted in the same renderer process as the source browser. Any
+  // modifications to |windowInfo| will be ignored if the parent browser is
+  // wrapped in a cef_browser_view_t. Popup browser creation will be canceled if
+  // the parent browser is destroyed before the popup browser creation completes
+  // (indicated by a call to OnAfterCreated for the popup browser). The
+  // |extra_info| parameter provides an opportunity to specify extra information
+  // specific to the created popup browser that will be passed to
+  // cef_render_process_handler_t::on_browser_created() in the render process.
+  ///
+  int CEF_CALLBACK on_before_popup(
+      struct _cef_life_span_handler_t* self,
+      struct _cef_browser_t* browser,
+      struct _cef_frame_t* frame,
+      const cef_string_t* target_url,
+      const cef_string_t* target_frame_name,
+      cef_window_open_disposition_t target_disposition,
+      int user_gesture,
+      const struct _cef_popup_features_t* popupFeatures,
+      struct _cef_window_info_t* windowInfo,
+      struct _cef_client_t** client,
+      struct _cef_browser_settings_t* settings,
+      struct _cef_dictionary_value_t** extra_info,
+      int* no_javascript_access){
+        DEBUG_CALLBACK("on_before_popup\n");  
+    }
+
 void initialize_cef_life_span_handler(cef_life_span_handler_t* handler) {
     DEBUG_CALLBACK("initialize_cef_life_span_handler\n");
     handler->base.size = sizeof(cef_life_span_handler_t);
     initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
     // callbacks - there are many, but implementing only one
     handler->on_before_close = on_before_close;
+    handler->on_after_created = on_after_created;
+    handler->on_before_popup = on_before_popup;
 }

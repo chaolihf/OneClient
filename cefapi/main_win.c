@@ -10,6 +10,9 @@
 #include "cefapi/cef_app.h"
 #include "cefapi/cef_client.h"
 #include "cefapi/cef_life_span_handler.h"
+#include "cefapi/cef_load_handler.h"
+#include "cefapi/cef_render_process_handler.h"
+
 #include "include/cef_version.h"
 
 #include "cefapi.h"
@@ -27,6 +30,8 @@ int number_add_mod(int a, int b, int mod) {
 
 // Globals
 cef_life_span_handler_t g_life_span_handler = {};
+cef_load_handler_t g_load_handler={};
+cef_render_process_handler_t g_cef_render_process_handler={};
 #ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);
@@ -66,6 +71,7 @@ int startCef(int argc, char** argv) {
 
     // Cef app
     cef_app_t app = {};
+    initialize_cef_render_process_handler(&g_cef_render_process_handler);
     initialize_cef_app(&app);
     
     // Execute subprocesses. It is also possible to have
@@ -101,7 +107,11 @@ int startCef(int argc, char** argv) {
     // Client handlers
     initialize_cef_client(&g_client);
     initialize_cef_life_span_handler(&g_life_span_handler);
-    //createBrowser("baidu","http://baidu.com",0);
+    initialize_cef_load_handler(&g_load_handler);
+    #ifdef windowsapp
+        createBrowser("aa","http://baidu.com",0);
+    #endif  
+    //
     if (!isStartMessageLoop){
         isStartMessageLoop=true;
         // Message loop. There is also cef_do_message_loop_work()
@@ -140,8 +150,8 @@ int createBrowser(const char * title,const char * url,int parent_window_handle){
     window_info.parent_window = NULL;
     window_info.bounds.x = CW_USEDEFAULT;
     window_info.bounds.y = CW_USEDEFAULT;
-    window_info.bounds.width = 600;
-    window_info.bounds.height = 600;
+    window_info.bounds.width = parent_window_handle==0?CW_USEDEFAULT:600;
+    window_info.bounds.height = parent_window_handle==0?CW_USEDEFAULT:600;
 
     // Window info - window title
     window_info.window_name = getCefString(title);
@@ -157,24 +167,11 @@ int createBrowser(const char * title,const char * url,int parent_window_handle){
     if(result==0)
     {
         printf("cef_browser_host_create_browser failed\n");
-        return 0;
     }
-    else{
-        if (!isStartMessageLoop){
-            isStartMessageLoop=true;
-            // Message loop. There is also cef_do_message_loop_work()
-            // that allow for integrating with existing message loops.
-            // On Windows for best performance you should set
-            // cef_settings_t.multi_threaded_message_loop to true.
-            // Note however that when you do that CEF UI thread is no
-            // more application main thread and using CEF API is more
-            // difficult and require using functions like cef_post_task
-            // for running tasks on CEF UI thread.
-            printf("cef_run_message_loop\n");
-            cef_run_message_loop();
-        }
-        return 1;
-    }
+    // cef_browser_t *result=cef_browser_host_create_browser_sync(&window_info, &g_client, &cef_url,
+    //                                 &g_browser_settings, NULL,NULL);
+    // return 0;
+    return result;
     
 }
 

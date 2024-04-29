@@ -8,6 +8,7 @@
 #include "include/capi/cef_client_capi.h"
 
 extern cef_life_span_handler_t g_life_span_handler;
+extern cef_load_handler_t g_load_handler;
 
 
 // ----------------------------------------------------------------------------
@@ -121,7 +122,7 @@ struct _cef_life_span_handler_t* CEF_CALLBACK get_life_span_handler(
 struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
         struct _cef_client_t* self) {
     DEBUG_CALLBACK("get_load_handler\n");
-    return NULL;
+    return &g_load_handler;
 }
 
 ///
