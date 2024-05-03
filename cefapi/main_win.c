@@ -63,7 +63,7 @@ int startCef(int argc, char** argv) {
                     DWORD processId = GetCurrentProcessId();
                     char message[256];
                     sprintf(message, "render process id : %lu", processId);
-                    //MessageBox(NULL, message, "debug process", MB_OK);
+                    MessageBox(NULL, message, "debug process", MB_OK);
                     break;
                 }
             }

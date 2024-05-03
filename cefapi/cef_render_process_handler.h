@@ -18,6 +18,9 @@
       struct _cef_browser_t* browser,
       struct _cef_dictionary_value_t* extra_info){
     DEBUG_CALLBACK("on_browser_created----------------\n");
+    cef_frame_t *frame=browser->get_main_frame(browser);
+    cef_string_t script=getCefString("alert('a');");
+    frame->execute_java_script(frame,&script,frame->get_url(frame),0);
   }
 
 

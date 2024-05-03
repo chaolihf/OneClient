@@ -81,36 +81,35 @@ struct _cef_browser_process_handler_t*
 struct _cef_render_process_handler_t*
         CEF_CALLBACK get_render_process_handler(struct _cef_app_t* self) {
     DEBUG_CALLBACK("get_render_process_handler\n");
-    if(cef_v8context_in_context() == 1) {
-        cef_v8context_t* cntx = cef_v8context_get_current_context();
-        int isValid = cntx->is_valid(cntx);
-        if(isValid == 1) {
-            cef_browser_t* browser = cntx->get_browser(cntx);
-            cef_frame_t *MAIN_FRAME = browser->get_main_frame(browser);
+    // if(cef_v8context_in_context() == 1) {
+    //     cef_v8context_t* cntx = cef_v8context_get_current_context();
+    //     int isValid = cntx->is_valid(cntx);
+    //     if(isValid == 1) {
+    //         cef_browser_t* browser = cntx->get_browser(cntx);
+    //         cef_frame_t *MAIN_FRAME = browser->get_main_frame(browser);
 
-            cntx->enter(cntx);
+    //         cntx->enter(cntx);
 
-            cef_v8handler_t handler={};
-            initialize_v8handler(&handler);
-            cef_v8value_t *invocation = cntx->get_global(cntx);
-            int funcLength=1;
-            char* funcMap[]={"test"};
-            for (int i = 0; i < funcLength; ++i) {
-                char *functionNamePtr = funcMap[i];
-                char functionName[128];
+    //         cef_v8handler_t handler={};
+    //         initialize_v8handler(&handler);
+    //         cef_v8value_t *invocation = cntx->get_global(cntx);
+    //         int funcLength=1;
+    //         char* funcMap[]={"test"};
+    //         for (int i = 0; i < funcLength; ++i) {
+    //             char *functionNamePtr = funcMap[i];
+    //             char functionName[128];
 
-                strcpy(functionName, functionNamePtr);
+    //             strcpy(functionName, functionNamePtr);
 
-                cef_string_t cef_functionName = {};
-                cef_string_utf8_to_utf16(functionName, strlen(functionName), &cef_functionName);
-                handler.base.add_ref((cef_base_ref_counted_t *)&handler.base);
-                cef_v8value_t *fn = cef_v8value_create_function(&cef_functionName, &handler);
-                invocation->set_value_bykey(invocation, &cef_functionName, fn, V8_PROPERTY_ATTRIBUTE_NONE);
-//                printf("%s -> %d\n", functionName, status);
-            }
-            cntx->exit(cntx);
-        }
-    }
+    //             cef_string_t cef_functionName = {};
+    //             cef_string_utf8_to_utf16(functionName, strlen(functionName), &cef_functionName);
+    //             handler.base.add_ref((cef_base_ref_counted_t *)&handler.base);
+    //             cef_v8value_t *fn = cef_v8value_create_function(&cef_functionName, &handler);
+    //             invocation->set_value_bykey(invocation, &cef_functionName, fn, V8_PROPERTY_ATTRIBUTE_NONE);
+    //         }
+    //         cntx->exit(cntx);
+    //     }
+    // }
     return &g_cef_render_process_handler;
 }
 
