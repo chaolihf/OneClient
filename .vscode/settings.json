@@ -16,7 +16,16 @@
         "cef_base_capi.h": "c",
         "xlocale": "c",
         "cef_string.h": "c",
-        "cef_client_capi.h": "c"
+        "cef_client_capi.h": "c",
+        "system_error": "cpp",
+        "iterator": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp",
+        "type_traits": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     },
     "cmake.configureOnOpen": true,
 }

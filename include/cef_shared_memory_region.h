@@ -1,5 +1,4 @@
-// Copyright (c) 2014 Marshall A. Greenblatt. Portions copyright (c) 2012
-// Google Inc. All rights reserved.
+// Copyright (c) 2022 Marshall A. Greenblatt. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -27,60 +26,44 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// ---------------------------------------------------------------------------
+//
+// The contents of this file must follow a specific format in order to
+// support the CEF translator tool. See the translator.README.txt file in the
+// tools directory for more information.
+//
 
-#ifndef CEF_INCLUDE_BASE_CEF_BASICTYPES_H_
-#define CEF_INCLUDE_BASE_CEF_BASICTYPES_H_
+#ifndef CEF_INCLUDE_CEF_SHARED_MEMORY_REGION_H_
+#define CEF_INCLUDE_CEF_SHARED_MEMORY_REGION_H_
 #pragma once
 
-#include <limits.h>  // For UINT_MAX
-#include <stddef.h>  // For size_t
+#include "include/cef_base.h"
 
-#include "include/base/cef_build.h"
+///
+/// Class that wraps platform-dependent share memory region mapping.
+///
+/*--cef(source=library)--*/
+class CefSharedMemoryRegion : public virtual CefBaseRefCounted {
+ public:
+  ///
+  /// Returns true if the mapping is valid.
+  ///
+  /*--cef()--*/
+  virtual bool IsValid() = 0;
 
-// The NSPR system headers define 64-bit as |long| when possible, except on
-// Mac OS X.  In order to not have typedef mismatches, we do the same on LP64.
-//
-// On Mac OS X, |long long| is used for 64-bit types for compatibility with
-// <inttypes.h> format macros even in the LP64 model.
-#if defined(__LP64__) && !defined(OS_MAC) && !defined(OS_OPENBSD)
-typedef long int64;
-typedef unsigned long uint64;
-#else
-typedef long long int64;
-typedef unsigned long long uint64;
-#endif
+  ///
+  /// Returns the size of the mapping in bytes. Returns 0 for invalid instances.
+  ///
+  /*--cef()--*/
+  virtual size_t Size() = 0;
 
-// TODO: Remove these type guards.  These are to avoid conflicts with
-// obsolete/protypes.h in the Gecko SDK.
-#ifndef _INT32
-#define _INT32
-typedef int int32;
-#endif
+  ///
+  /// Returns the pointer to the memory. Returns nullptr for invalid instances.
+  /// The returned pointer is only valid for the life span of this object.
+  ///
+  /*--cef()--*/
+  virtual void* Memory() = 0;
+};
 
-// TODO: Remove these type guards.  These are to avoid conflicts with
-// obsolete/protypes.h in the Gecko SDK.
-#ifndef _UINT32
-#define _UINT32
-typedef unsigned int uint32;
-#endif
-
-#ifndef _INT16
-#define _INT16
-typedef short int16;
-#endif
-
-#ifndef _UINT16
-#define _UINT16
-typedef unsigned short uint16;
-#endif
-
-// UTF-16 character type.
-#ifndef char16
-#if defined(WCHAR_T_IS_UTF16)
-typedef wchar_t char16;
-#elif defined(WCHAR_T_IS_UTF32)
-typedef unsigned short char16;
-#endif
-#endif
-
-#endif  // CEF_INCLUDE_BASE_CEF_BASICTYPES_H_
+#endif  // CEF_INCLUDE_CEF_SHARED_MEMORY_REGION_H_

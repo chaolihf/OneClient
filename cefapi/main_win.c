@@ -17,6 +17,8 @@
 
 #include "cefapi.h"
 #include "utils.h"
+#include <windows.h>
+
 
 cef_client_t g_client={};
 cef_browser_settings_t g_browser_settings = {};
@@ -52,16 +54,25 @@ int startCef(int argc, char** argv) {
         printf("none (Main process)");
     } else {
         for (int i = 1; i < argc; i++) {
-            if (strlen(argv[i]) > 128)
+            if (strlen(argv[i]) > 128){
                 printf("... ");
-            else
-                printf("%s ", argv[i]);
+            }
+            else{
+                //printf("%s ", argv[i]);
+                if (strcmp(argv[i], "--type=renderer") == 0) {
+                    DWORD processId = GetCurrentProcessId();
+                    char message[256];
+                    sprintf(message, "render process id : %lu", processId);
+                    //MessageBox(NULL, message, "debug process", MB_OK);
+                    break;
+                }
+            }
         }
     }
     printf("\n\n");
 
     // CEF version
-    if (argc == 0) {
+    if (argc == 1) {
         printf("CEF version: %s\n", CEF_VERSION);
     }
 
@@ -89,7 +100,7 @@ int startCef(int argc, char** argv) {
     cef_settings_t settings = {};
     //不知道为什么在3版本中直接计算sizeof大小，但在最新版本中需要减去16来计算大小；
     //don't known why should substrace 16 byte for size,otherwise will cause invalid settings->[base.]size
-    settings.size = sizeof(cef_settings_t)-16;
+    settings.size = sizeof(cef_settings_t);
     settings.log_severity = LOGSEVERITY_VERBOSE; // Show only warnings/errors
     settings.no_sandbox = 1;
 
@@ -102,7 +113,7 @@ int startCef(int argc, char** argv) {
     }
     // Browser settings. It is mandatory to set the
     // "size" member.
-    g_browser_settings.size = sizeof(cef_browser_settings_t)-16;
+    g_browser_settings.size = sizeof(cef_browser_settings_t);
     
     // Client handlers
     initialize_cef_client(&g_client);

@@ -49,9 +49,7 @@
 #include "include/base/cef_build.h"
 #include "include/base/cef_compiler_specific.h"
 #include "include/base/cef_logging.h"
-#include "include/base/cef_macros.h"
 #include "include/base/cef_scoped_refptr.h"
-#include "include/base/cef_template_util.h"
 #include "include/base/cef_thread_checker.h"
 
 namespace base {
@@ -75,6 +73,9 @@ class RefCountedBase {
     thread_checker_.DetachFromThread();
 #endif
   }
+
+  RefCountedBase(const RefCountedBase&) = delete;
+  RefCountedBase& operator=(const RefCountedBase&) = delete;
 
   ~RefCountedBase() {
 #if DCHECK_IS_ON()
@@ -103,13 +104,16 @@ class RefCountedBase {
 
 #if DCHECK_IS_ON()
     DCHECK(!in_dtor_);
-    if (ref_count_ == 0)
+    if (ref_count_ == 0) {
       in_dtor_ = true;
+    }
 
-    if (ref_count_ >= 1)
+    if (ref_count_ >= 1) {
       DCHECK(CalledOnValidThread());
-    if (ref_count_ == 1)
+    }
+    if (ref_count_ == 1) {
       thread_checker_.DetachFromThread();
+    }
 #endif
 
     return ref_count_ == 0;
@@ -168,8 +172,6 @@ class RefCountedBase {
   mutable bool in_dtor_ = false;
   mutable ThreadChecker thread_checker_;
 #endif
-
-  DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
 };
 
 class RefCountedThreadSafeBase {
@@ -185,6 +187,9 @@ class RefCountedThreadSafeBase {
     needs_adopt_ref_ = true;
 #endif
   }
+
+  RefCountedThreadSafeBase(const RefCountedThreadSafeBase&) = delete;
+  RefCountedThreadSafeBase& operator=(const RefCountedThreadSafeBase&) = delete;
 
 #if DCHECK_IS_ON()
   ~RefCountedThreadSafeBase();
@@ -259,8 +264,6 @@ class RefCountedThreadSafeBase {
   mutable bool needs_adopt_ref_ = false;
   mutable bool in_dtor_ = false;
 #endif
-
-  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
 };
 
 // ScopedAllowCrossThreadRefCountAccess disables the check documented on
@@ -289,52 +292,26 @@ class ScopedAllowCrossThreadRefCountAccess final {
 using ScopedAllowCrossThreadRefCountAccess =
     cef_subtle::ScopedAllowCrossThreadRefCountAccess;
 
-//
-// A base class for reference counted classes.  Otherwise, known as a cheap
-// knock-off of WebKit's RefCounted<T> class.  To use this, just extend your
-// class from it like so:
-//
-//   class MyFoo : public base::RefCounted<MyFoo> {
-//    ...
-//    private:
-//     friend class base::RefCounted<MyFoo>;
-//     ~MyFoo();
-//   };
-//
-// Usage Notes:
-// 1. You should always make your destructor non-public, to avoid any code
-// deleting the object accidentally while there are references to it.
-// 2. You should always make the ref-counted base class a friend of your class,
-// so that it can access the destructor.
-//
-// The ref count manipulation to RefCounted is NOT thread safe and has DCHECKs
-// to trap unsafe cross thread usage. A subclass instance of RefCounted can be
-// passed to another execution thread only when its ref count is 1. If the ref
-// count is more than 1, the RefCounted class verifies the ref updates are made
-// on the same execution thread as the previous ones. The subclass can also
-// manually call IsOnValidThread to trap other non-thread-safe accesses; see
-// the documentation for that method.
-//
-//
-// The reference count starts from zero by default, and we intended to migrate
-// to start-from-one ref count. Put REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() to
-// the ref counted class to opt-in.
-//
-// If an object has start-from-one ref count, the first scoped_refptr need to be
-// created by base::AdoptRef() or base::MakeRefCounted(). We can use
-// base::MakeRefCounted() to create create both type of ref counted object.
-//
-// The motivations to use start-from-one ref count are:
-//  - Start-from-one ref count doesn't need the ref count increment for the
-//    first reference.
-//  - It can detect an invalid object acquisition for a being-deleted object
-//    that has zero ref count. That tends to happen on custom deleter that
-//    delays the deletion.
-//    TODO(tzik): Implement invalid acquisition detection.
-//  - Behavior parity to Blink's WTF::RefCounted, whose count starts from one.
-//    And start-from-one ref count is a step to merge WTF::RefCounted into
-//    base::RefCounted.
-//
+///
+/// The reference count starts from zero by default, and we intended to migrate
+/// to start-from-one ref count. Put REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() to
+/// the ref counted class to opt-in.
+///
+/// If an object has start-from-one ref count, the first scoped_refptr need to
+/// be created by base::AdoptRef() or base::MakeRefCounted(). We can use
+/// base::MakeRefCounted() to create create both type of ref counted object.
+///
+/// The motivations to use start-from-one ref count are:
+///  - Start-from-one ref count doesn't need the ref count increment for the
+///    first reference.
+///  - It can detect an invalid object acquisition for a being-deleted object
+///    that has zero ref count. That tends to happen on custom deleter that
+///    delays the deletion.
+///    TODO(tzik): Implement invalid acquisition detection.
+///  - Behavior parity to Blink's WTF::RefCounted, whose count starts from one.
+///    And start-from-one ref count is a step to merge WTF::RefCounted into
+///    base::RefCounted.
+///
 #define REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE()                 \
   static constexpr ::base::cef_subtle::StartRefCountFromOneTag \
       kRefCountPreference = ::base::cef_subtle::kStartRefCountFromOneTag
@@ -342,6 +319,10 @@ using ScopedAllowCrossThreadRefCountAccess =
 template <class T, typename Traits>
 class RefCounted;
 
+///
+/// Default traits for RefCounted<T>.  Deletes the object when its ref count
+/// reaches 0. Overload to delete it on a different thread etc.
+///
 template <typename T>
 struct DefaultRefCountedTraits {
   static void Destruct(const T* x) {
@@ -349,6 +330,34 @@ struct DefaultRefCountedTraits {
   }
 };
 
+///
+/// A base class for reference counted classes. Otherwise, known as a cheap
+/// knock-off of WebKit's RefCounted<T> class. To use this, just extend your
+/// class from it like so:
+///
+/// <pre>
+///   class MyFoo : public base::RefCounted<MyFoo> {
+///    ...
+///    private:
+///     friend class base::RefCounted<MyFoo>;
+///     ~MyFoo();
+///   };
+/// </pre>
+///
+/// Usage Notes:
+/// 1. You should always make your destructor non-public, to avoid any code
+///    deleting the object accidentally while there are references to it.
+/// 2. You should always make the ref-counted base class a friend of your class,
+///    so that it can access the destructor.
+///
+/// The ref count manipulation to RefCounted is NOT thread safe and has DCHECKs
+/// to trap unsafe cross thread usage. A subclass instance of RefCounted can be
+/// passed to another execution thread only when its ref count is 1. If the ref
+/// count is more than 1, the RefCounted class verifies the ref updates are made
+/// on the same execution thread as the previous ones. The subclass can also
+/// manually call IsOnValidThread to trap other non-thread-safe accesses; see
+/// the documentation for that method.
+///
 template <class T, typename Traits = DefaultRefCountedTraits<T>>
 class RefCounted : public cef_subtle::RefCountedBase {
  public:
@@ -356,6 +365,9 @@ class RefCounted : public cef_subtle::RefCountedBase {
       cef_subtle::kStartRefCountFromZeroTag;
 
   RefCounted() : cef_subtle::RefCountedBase(T::kRefCountPreference) {}
+
+  RefCounted(const RefCounted&) = delete;
+  RefCounted& operator=(const RefCounted&) = delete;
 
   void AddRef() const { cef_subtle::RefCountedBase::AddRef(); }
 
@@ -379,16 +391,16 @@ class RefCounted : public cef_subtle::RefCountedBase {
   static void DeleteInternal(const U* x) {
     delete x;
   }
-
-  DISALLOW_COPY_AND_ASSIGN(RefCounted);
 };
 
 // Forward declaration.
 template <class T, typename Traits>
 class RefCountedThreadSafe;
 
-// Default traits for RefCountedThreadSafe<T>.  Deletes the object when its ref
-// count reaches 0.  Overload to delete it on a different thread etc.
+///
+/// Default traits for RefCountedThreadSafe<T>. Deletes the object when its ref
+/// count reaches 0. Overload to delete it on a different thread etc.
+///
 template <typename T>
 struct DefaultRefCountedThreadSafeTraits {
   static void Destruct(const T* x) {
@@ -400,21 +412,26 @@ struct DefaultRefCountedThreadSafeTraits {
   }
 };
 
-//
-// A thread-safe variant of RefCounted<T>
-//
-//   class MyFoo : public base::RefCountedThreadSafe<MyFoo> {
-//    ...
-//   };
-//
-// If you're using the default trait, then you should add compile time
-// asserts that no one else is deleting your object.  i.e.
-//    private:
-//     friend class base::RefCountedThreadSafe<MyFoo>;
-//     ~MyFoo();
-//
-// We can use REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() with RefCountedThreadSafe
-// too. See the comment above the RefCounted definition for details.
+///
+/// A thread-safe variant of RefCounted<T>
+///
+/// <pre>
+///   class MyFoo : public base::RefCountedThreadSafe<MyFoo> {
+///    ...
+///   };
+/// </pre>
+///
+/// If you're using the default trait, then you should add compile time
+/// asserts that no one else is deleting your object.  i.e.
+/// <pre>
+///    private:
+///     friend class base::RefCountedThreadSafe<MyFoo>;
+///     ~MyFoo();
+/// </pre>
+///
+/// We can use REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() with RefCountedThreadSafe
+/// too. See the comment above the RefCounted definition for details.
+///
 template <class T, typename Traits = DefaultRefCountedThreadSafeTraits<T>>
 class RefCountedThreadSafe : public cef_subtle::RefCountedThreadSafeBase {
  public:
@@ -423,6 +440,9 @@ class RefCountedThreadSafe : public cef_subtle::RefCountedThreadSafeBase {
 
   explicit RefCountedThreadSafe()
       : cef_subtle::RefCountedThreadSafeBase(T::kRefCountPreference) {}
+
+  RefCountedThreadSafe(const RefCountedThreadSafe&) = delete;
+  RefCountedThreadSafe& operator=(const RefCountedThreadSafe&) = delete;
 
   void AddRef() const { AddRefImpl(T::kRefCountPreference); }
 
@@ -450,14 +470,12 @@ class RefCountedThreadSafe : public cef_subtle::RefCountedThreadSafeBase {
   void AddRefImpl(cef_subtle::StartRefCountFromOneTag) const {
     cef_subtle::RefCountedThreadSafeBase::AddRefWithCheck();
   }
-
-  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
 };
 
-//
-// A thread-safe wrapper for some piece of data so we can place other
-// things in scoped_refptrs<>.
-//
+///
+/// A thread-safe wrapper for some piece of data so we can place other
+/// things in scoped_refptrs<>.
+///
 template <typename T>
 class RefCountedData
     : public base::RefCountedThreadSafe<base::RefCountedData<T>> {
@@ -466,7 +484,7 @@ class RefCountedData
   RefCountedData(const T& in_value) : data(in_value) {}
   RefCountedData(T&& in_value) : data(std::move(in_value)) {}
   template <typename... Args>
-  explicit RefCountedData(in_place_t, Args&&... args)
+  explicit RefCountedData(std::in_place_t, Args&&... args)
       : data(std::forward<Args>(args)...) {}
 
   T data;

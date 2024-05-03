@@ -34,11 +34,6 @@
                                     struct _cef_browser_t* browser,
                                     struct _cef_frame_t* frame,
                                     cef_transition_type_t transition_type){
-    if(frame){
-        cef_string_userfree_t url=frame->get_url(frame);
-        //char* url=ConvertCefStringToChar(url);
-        DEBUG_CALLBACK("A");
-    } 
     DEBUG_CALLBACK("on_load_start\n");  
   }
 

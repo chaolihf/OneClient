@@ -88,6 +88,7 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
       struct _cef_dictionary_value_t** extra_info,
       int* no_javascript_access){
         DEBUG_CALLBACK("on_before_popup\n");  
+        return 0;
     }
 
 void initialize_cef_life_span_handler(cef_life_span_handler_t* handler) {

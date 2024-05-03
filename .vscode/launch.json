@@ -5,6 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "调试Render进程",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${workspaceFolder}\\Release\\windowshelper.exe",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "Run C Test",
             "type": "cppdbg",
             "request": "launch",
@@ -26,6 +46,7 @@
             ],
             "preLaunchTask": "generate c program",
         },
+        
         {
             "name": "Run Go Test",
             "type": "go",
