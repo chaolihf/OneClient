@@ -151,7 +151,6 @@ render_process_handler * initialize_cef_render_process_handler(){
     DEBUG_CALLBACK("initialize_cef_render_process_handler\n");
     render_process_handler *r=calloc(1,sizeof(render_process_handler));
     cef_render_process_handler_t *handler=(cef_render_process_handler_t *)r;
-//    handler->base.add_ref((cef_base_ref_counted_t *)r);
     handler->on_browser_created= on_browser_created;
     handler->on_browser_destroyed= on_browser_destroyed;
     handler->on_context_created= on_context_created;
@@ -161,4 +160,19 @@ render_process_handler * initialize_cef_render_process_handler(){
     handler->on_process_message_received= on_process_message_received_for_render;
     handler->on_web_kit_initialized=on_web_kit_initialized;
     return r;
+}
+
+
+void initialize_cef_render_process_handlerDirect(cef_render_process_handler_t *handler){
+    DEBUG_CALLBACK("initialize_cef_render_process_handler\n");
+    handler->base.size = sizeof(cef_render_process_handler_t);
+    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
+    handler->on_browser_created= on_browser_created;
+    handler->on_browser_destroyed= on_browser_destroyed;
+    handler->on_context_created= on_context_created;
+    handler->on_context_released= on_context_released;
+    handler->on_uncaught_exception= on_uncaught_exception;
+    handler->on_focused_node_changed= on_focused_node_changed;
+    handler->on_process_message_received= on_process_message_received_for_render;
+    handler->on_web_kit_initialized=on_web_kit_initialized;
 }

@@ -33,7 +33,7 @@ int number_add_mod(int a, int b, int mod) {
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
-render_process_handler *g_cef_render_process_handler;
+cef_render_process_handler_t g_cef_render_process_handler={};
 #ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);
@@ -80,8 +80,10 @@ int startCef(int argc, char** argv) {
     cef_main_args_t main_args = {};
     main_args.instance = GetModuleHandle(NULL);
 
+    //g_cef_render_process_handler=initialize_cef_render_process_handler();
+    initialize_cef_render_process_handlerDirect(&g_cef_render_process_handler);
+
     // Cef app
-    g_cef_render_process_handler=initialize_cef_render_process_handler();
     app_t *app=initialize_cef_app();
     
     // Execute subprocesses. It is also possible to have
@@ -109,6 +111,7 @@ int startCef(int argc, char** argv) {
     cef_app_t *cef_app = (cef_app_t *)app;
     cef_app->base.add_ref((cef_base_ref_counted_t *)app);
     result=cef_initialize(&main_args, &settings, cef_app, NULL);
+    cef_app->base.release((cef_base_ref_counted_t *)app);
     if(result==0){
         printf("cef_initialize failed\n");
         return 0;
