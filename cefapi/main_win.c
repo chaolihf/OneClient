@@ -12,6 +12,7 @@
 #include "cefapi/cef_life_span_handler.h"
 #include "cefapi/cef_load_handler.h"
 #include "cefapi/cef_render_process_handler.h"
+#include "cefapi/cef_display_handler.h"
 
 #include "include/cef_version.h"
 
@@ -33,6 +34,9 @@ int number_add_mod(int a, int b, int mod) {
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
+//display_handler *g_display_handler;
+cef_display_handler_t g_display_handler={};
+
 cef_render_process_handler_t g_cef_render_process_handler={};
 int g_browser_counter=0;
 
@@ -83,7 +87,7 @@ int startCef(int argc, char** argv) {
     main_args.instance = GetModuleHandle(NULL);
 
     //g_cef_render_process_handler=initialize_cef_render_process_handler();
-    initialize_cef_render_process_handlerDirect(&g_cef_render_process_handler);
+    initialize_cef_render_process_handler_direct(&g_cef_render_process_handler);
 
     // Cef app
     app_t *app=initialize_cef_app();
@@ -126,6 +130,8 @@ int startCef(int argc, char** argv) {
     g_client=initialize_cef_client();
     g_life_span_handler=initialize_cef_life_span_handler();
     g_load_handler=initialize_cef_load_handler();
+    //g_display_handler=initialize_display_handler();
+    initialize_display_handler_direct(&g_display_handler);
     #ifdef windowsapp
         createBrowser("aa","http://baidu.com",0);
     #endif  

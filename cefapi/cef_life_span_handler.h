@@ -1,6 +1,6 @@
 // CEF C API example
 // Project website: https://github.com/cztomczak/cefcapi
-
+//see https://zhuanlan.zhihu.com/p/619109619 for js binding
 #pragma once
 
 #include "cef_base.h"

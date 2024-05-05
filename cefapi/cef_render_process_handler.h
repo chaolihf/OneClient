@@ -163,7 +163,7 @@ render_process_handler * initialize_cef_render_process_handler(){
 }
 
 
-void initialize_cef_render_process_handlerDirect(cef_render_process_handler_t *handler){
+void initialize_cef_render_process_handler_direct(cef_render_process_handler_t *handler){
     DEBUG_CALLBACK("initialize_cef_render_process_handler\n");
     handler->base.size = sizeof(cef_render_process_handler_t);
     initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);

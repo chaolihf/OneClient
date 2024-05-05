@@ -9,7 +9,8 @@
 
 extern life_span_handler_t *g_life_span_handler;
 extern load_handler *g_load_handler;
-
+//extern display_handler *g_display_handler;
+extern cef_display_handler_t g_display_handler;
 
 // ----------------------------------------------------------------------------
 // struct cef_client_t
@@ -46,7 +47,8 @@ struct _cef_dialog_handler_t* CEF_CALLBACK get_dialog_handler(
 struct _cef_display_handler_t* CEF_CALLBACK get_display_handler(
         struct _cef_client_t* self) {
     DEBUG_CALLBACK("get_display_handler\n");
-    return NULL;
+    //return (cef_display_handler_t *)g_display_handler;
+    return &g_display_handler;
 }
 
 ///
@@ -181,3 +183,5 @@ client_t * initialize_cef_client() {
     client->on_process_message_received = on_process_message_received;
     return c;
 }
+
+
