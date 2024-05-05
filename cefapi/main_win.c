@@ -34,6 +34,8 @@ client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
 cef_render_process_handler_t g_cef_render_process_handler={};
+int g_browser_counter=0;
+
 #ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);

@@ -22,9 +22,10 @@
                              cef_string_t* exception){
         DEBUG_CALLBACK("v8_execute\n");
         if (isEqual(name,"testfunc")) {
+            DEBUG_CALLBACK("v8_execute testfunc\n");
             cef_string_t resultData=getCefString("test func value");
             cef_v8value_t *result= cef_v8value_create_string(&resultData);
-            retval = &result;
+            *retval = result;
             return 1;
         }
         return 0;

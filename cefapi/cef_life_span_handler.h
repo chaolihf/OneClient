@@ -7,6 +7,7 @@
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_life_span_handler_capi.h"
 
+extern int g_browser_counter ;
 // ----------------------------------------------------------------------------
 // struct cef_life_span_handler_t
 // ----------------------------------------------------------------------------
@@ -30,11 +31,10 @@
 void CEF_CALLBACK on_before_close(struct _cef_life_span_handler_t* self,
                                   struct _cef_browser_t* browser) {
     DEBUG_CALLBACK("on_before_close\n");
-    // TODO: Check how many browsers do exist and quit message
-    //       loop only when last browser is closed. Otherwise
-    //       closing a popup window will exit app while main
-    //       window shouldn't be closed.
-    cef_quit_message_loop();
+    g_browser_counter--;
+    if(g_browser_counter==0){
+        cef_quit_message_loop();
+    }
 }
 
 ///
@@ -46,6 +46,7 @@ void CEF_CALLBACK on_before_close(struct _cef_life_span_handler_t* self,
 void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
                                     struct _cef_browser_t* browser){
     DEBUG_CALLBACK("on_after_created\n");    
+    g_browser_counter++;
 }
 
 ///
