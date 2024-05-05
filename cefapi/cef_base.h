@@ -56,7 +56,7 @@ CEF_CALLBACK \
 type##_add_ref(cef_base_ref_counted_t *self) \
 { \
 	struct _##type *handler = (struct _##type *)self; \
-	printf("process %d add ref " #type " %d->%d \n",GetCurrentProcessId(),handler->ref_count,handler->ref_count+1); \
+	/*printf("process %d add ref " #type " %d->%d \n",GetCurrentProcessId(),handler->ref_count,handler->ref_count+1); \*/ \
 	atomic_fetch_add(&handler->ref_count, 1); \
 }
 
@@ -70,7 +70,7 @@ int \
 CEF_CALLBACK \
 type##_release(cef_base_ref_counted_t* self) { \
 	struct _##type *handler = (struct _##type *)self; \
-	printf("process %d release ref " #type " %d->%d \n",GetCurrentProcessId(),handler->ref_count,handler->ref_count-1); \
+	/*printf("process %d release ref " #type " %d->%d \n",GetCurrentProcessId(),handler->ref_count,handler->ref_count-1); \ */ \
 	if (atomic_fetch_sub(&handler->ref_count, 1) - 1 == 0) { \
 		free(handler); \
 		return 1; \

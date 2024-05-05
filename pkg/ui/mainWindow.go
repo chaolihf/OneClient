@@ -19,8 +19,10 @@ import (
 var icoData []byte
 
 var (
-	logger    *zap.Logger
-	runUILoop bool = false
+	logger       *zap.Logger
+	runUILoop    bool = false
+	window       *windows.Window
+	addressValue string = "https://www.baidu.com/"
 )
 
 func ShowMain(rootLogger *zap.Logger) {
@@ -82,6 +84,7 @@ func createBrowserWindow() error {
 		return err
 	}
 	w.SetScroll(false, true)
+	window = w
 	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, 100, 800, 800)
 	return nil
 }
@@ -121,11 +124,37 @@ func createWindow() error {
 }
 
 func createToolbar() base.Widget {
+	browserTab := &goey.Tabs{
+		Children: []goey.TabItem{
+			{
+				Caption: "Sina",
+			},
+			{
+				Caption: "Baidu",
+			},
+		},
+	}
+
 	widget := &goey.VBox{
 		Children: []base.Widget{
-			&goey.Label{Text: "Password input:"},
-			&goey.TextInput{
-				Value: "Some input...",
+			browserTab,
+			&goey.HBox{
+				Children: []base.Widget{
+					&goey.Label{Text: "地址:"},
+					&goey.Expand{
+						Child: &goey.TextInput{
+							Value:       addressValue,
+							Placeholder: "输入访问的地址",
+							OnChange: func(v string) {
+								addressValue = v
+							},
+						},
+					},
+					&goey.Button{Text: "转到", Default: true, OnClick: func() {
+						window.Message("访问" + addressValue).WithInfo().WithTitle("提示").Show()
+						loadUrl(addressValue)
+					}},
+				},
 			},
 		},
 	}

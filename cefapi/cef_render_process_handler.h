@@ -127,7 +127,11 @@
       cef_process_id_t source_process,
       struct _cef_process_message_t* message){
         DEBUG_CALLBACK("on_process_message_received_for_render\n");
-        return 0;
+        //cef_string_userfree_t name=message->get_name(message);
+        //const cef_string_t name = getCefString("https://baidu.com");
+        //frame->load_url(frame,&name);
+        //cef_string_userfree_free(name);
+        return 1;
       }
 
   ///

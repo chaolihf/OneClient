@@ -8,6 +8,8 @@
 #include "include/capi/cef_life_span_handler_capi.h"
 
 extern int g_browser_counter ;
+extern cef_browser_t *g_browser;
+
 // ----------------------------------------------------------------------------
 // struct cef_life_span_handler_t
 // ----------------------------------------------------------------------------
@@ -46,6 +48,12 @@ void CEF_CALLBACK on_before_close(struct _cef_life_span_handler_t* self,
 void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
                                     struct _cef_browser_t* browser){
     DEBUG_CALLBACK("on_after_created\n");    
+    if(g_browser== NULL){
+        g_browser=browser;
+        // cef_frame_t *mainFrame=g_browser->get_main_frame(g_browser);
+        // cef_string_t url=getCefString("https://baidu.com");
+        // mainFrame->load_url(mainFrame,&url);
+    }
     g_browser_counter++;
 }
 

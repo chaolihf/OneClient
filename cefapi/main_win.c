@@ -31,6 +31,7 @@ int number_add_mod(int a, int b, int mod) {
 }
 
 // Globals
+cef_browser_t *g_browser;
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
@@ -39,7 +40,7 @@ cef_display_handler_t g_display_handler={};
 
 cef_render_process_handler_t g_cef_render_process_handler={};
 int g_browser_counter=0;
-
+bool isBrowserProcess=false;
 #ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);
@@ -58,6 +59,7 @@ int startCef(int argc, char** argv) {
     printf("\nProcess args: ");
     if (argc == 1) {
         printf("none (Main process)");
+        isBrowserProcess=true;
     } else {
         for (int i = 1; i < argc; i++) {
             if (strlen(argv[i]) > 128){
@@ -205,4 +207,22 @@ int createBrowser(const char * title,const char * url,int parent_window_handle,i
     
 }
 
+void loadUrl(const char* url){
+    if (isBrowserProcess){
+        cef_frame_t *frame=g_browser->get_main_frame(g_browser);
+        cef_string_userfree_t oldUrl=frame->get_url(frame);
+        cef_string_utf8_t cefString={};
+        cef_string_utf16_to_utf8(oldUrl->str,oldUrl->length,&cefString);
+        printf("oldUrl:%s\n",cefString.str);
 
+
+        const cef_string_t cef_url = getCefString(url);
+        // cef_process_message_t *message=cef_process_message_create(&cef_url);
+        // cef_list_value_t *arguments= message->get_argument_list(message);
+        // arguments->set_int(arguments,0,10);
+        // frame->send_process_message(frame,PID_RENDERER,message);
+        //frame->load_url(frame,&cef_url);
+        //frame->select_all(frame);
+        
+    }
+}
