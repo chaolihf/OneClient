@@ -64,12 +64,13 @@ int startCef(int argc, char** argv) {
                 printf("... ");
             }
             else{
-                //printf("%s ", argv[i]);
+                printf("%s ", argv[i]);
                 if (strcmp(argv[i], "--type=renderer") == 0) {
                     DWORD processId = GetCurrentProcessId();
                     char message[256];
                     sprintf(message, "render process id : %lu", processId);
-                    MessageBox(NULL, message, "debug process", MB_OK);
+                    //for debug
+                    //MessageBox(NULL, message, "debug process", MB_OK);
                     break;
                 }
             }
@@ -171,7 +172,6 @@ int createBrowser(const char * title,const char * url,int parent_window_handle){
     else {
         window_info.style=window_info.style | WS_OVERLAPPEDWINDOW ;
     }
-    window_info.parent_window = NULL;
     window_info.bounds.x = CW_USEDEFAULT;
     window_info.bounds.y = CW_USEDEFAULT;
     window_info.bounds.width = parent_window_handle==0?CW_USEDEFAULT:600;
