@@ -68,14 +68,17 @@
                                     const cef_string_t* errorText,
                                     const cef_string_t* failedUrl){
         DEBUG_CALLBACK("on_load_error\n");  
+        printf("load error : %d,info =%s\n",errorCode,errorText->str);
    }
 
-void initialize_cef_load_handler(cef_load_handler_t *handler){
+load_handler *initialize_cef_load_handler(){
     DEBUG_CALLBACK("initialize_cef_load_handler\n");
-    handler->base.size = sizeof(cef_load_handler_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
+    load_handler *l=calloc(1,sizeof(load_handler));
+    cef_load_handler_t *handler = (cef_load_handler_t *)l;
+    //handler->base.add_ref((cef_base_ref_counted_t *)l);
     handler->on_loading_state_change= on_loading_state_change;
     handler->on_load_end=on_load_end;
     handler->on_load_error=on_load_error;
     handler->on_load_start=on_load_start;
+    return l;
 }

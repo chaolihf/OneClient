@@ -91,12 +91,15 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
         return 0;
     }
 
-void initialize_cef_life_span_handler(cef_life_span_handler_t* handler) {
+life_span_handler_t * initialize_cef_life_span_handler() {
     DEBUG_CALLBACK("initialize_cef_life_span_handler\n");
-    handler->base.size = sizeof(cef_life_span_handler_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
-    // callbacks - there are many, but implementing only one
+    life_span_handler_t *h;
+    h = calloc(1, sizeof(life_span_handler_t));
+    cef_life_span_handler_t *handler = &h->handler;
+    initialize_cef_base(h);
+    handler->base.add_ref((cef_base_ref_counted_t *)h);
     handler->on_before_close = on_before_close;
     handler->on_after_created = on_after_created;
     handler->on_before_popup = on_before_popup;
+    return h;
 }

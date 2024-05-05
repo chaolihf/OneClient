@@ -8,7 +8,9 @@
 #include "include/capi/cef_frame_capi.h"
 
 #include "cef_v8handler.h"
-extern cef_render_process_handler_t g_cef_render_process_handler;
+#include "cef_render_process_handler.h"
+
+extern render_process_handler *g_cef_render_process_handler;
 
 // ----------------------------------------------------------------------------
 // cef_app_t
@@ -110,17 +112,26 @@ struct _cef_render_process_handler_t*
     //         cntx->exit(cntx);
     //     }
     // }
-    return &g_cef_render_process_handler;
+
+    //cef_render_process_handler_t * handler=(cef_render_process_handler_t *)g_cef_render_process_handler;
+    render_process_handler *r=initialize_cef_render_process_handler();
+    DEBUG_CALLBACK("finish get_render_process_handler\n");
+    cef_render_process_handler_t *handler=(cef_render_process_handler_t *)r;
+    //handler->base.add_ref((cef_base_ref_counted_t *)handler);
+    return handler;
 }
 
-void initialize_cef_app(cef_app_t* app) {
+app_t * initialize_cef_app() {
     printf("initialize_cef_app\n");
-    app->base.size = sizeof(cef_app_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)app);
+    app_t *a = calloc(1, sizeof(app_t));
+    initialize_cef_base(a);
+    cef_app_t *app = (cef_app_t *)a;
     // callbacks
     app->on_before_command_line_processing = on_before_command_line_processing;
     app->on_register_custom_schemes = on_register_custom_schemes;
     app->get_resource_bundle_handler = get_resource_bundle_handler;
     app->get_browser_process_handler = get_browser_process_handler;
     app->get_render_process_handler = get_render_process_handler;
+    app->base.add_ref((cef_base_ref_counted_t *)a);
+    return a;
 }

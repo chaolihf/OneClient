@@ -21,13 +21,23 @@
                              struct _cef_v8value_t** retval,
                              cef_string_t* exception){
         DEBUG_CALLBACK("v8_execute\n");
-        return 1;
+        if (isEqual(name,"testfunc")) {
+            cef_string_t resultData=getCefString("test func value");
+            cef_v8value_t *result= cef_v8value_create_string(&resultData);
+            retval = &result;
+            return 1;
+        }
+        return 0;
     }
 
 
-void initialize_v8handler(cef_v8handler_t *handler){
+invocation_handler* initialize_v8handler(){
     DEBUG_CALLBACK("initialize_v8handler\n");
-    handler->base.size = sizeof(cef_v8handler_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
+    invocation_handler  *h;
+    h = calloc(1, sizeof(invocation_handler));
+    initialize_cef_base(h);
+    cef_v8handler_t *handler = (cef_v8handler_t *)h;
+    handler->base.add_ref((cef_base_ref_counted_t *)h);
     handler->execute = v8_execute;
+    return h;
 }

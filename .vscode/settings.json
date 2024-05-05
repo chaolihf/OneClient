@@ -25,7 +25,11 @@
         "xtree": "cpp",
         "type_traits": "cpp",
         "xstring": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "cef_net_error_list.h": "c",
+        "cef_display_handler_capi.h": "c",
+        "xiosbase": "c",
+        "cef_render_process_handler_capi.h": "c"
     },
     "cmake.configureOnOpen": true,
 }

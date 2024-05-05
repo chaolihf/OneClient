@@ -7,8 +7,8 @@
 #include "cef_life_span_handler.h"
 #include "include/capi/cef_client_capi.h"
 
-extern cef_life_span_handler_t g_life_span_handler;
-extern cef_load_handler_t g_load_handler;
+extern life_span_handler_t *g_life_span_handler;
+extern load_handler *g_load_handler;
 
 
 // ----------------------------------------------------------------------------
@@ -112,8 +112,9 @@ struct _cef_keyboard_handler_t* CEF_CALLBACK get_keyboard_handler(
 struct _cef_life_span_handler_t* CEF_CALLBACK get_life_span_handler(
         struct _cef_client_t* self) {
     DEBUG_CALLBACK("get_life_span_handler\n");
-    // Implemented!
-    return &g_life_span_handler;
+    cef_life_span_handler_t * handler=(cef_life_span_handler_t *)g_life_span_handler;
+    handler->base.add_ref((cef_base_ref_counted_t *)g_life_span_handler);
+    return handler;
 }
 
 ///
@@ -122,7 +123,7 @@ struct _cef_life_span_handler_t* CEF_CALLBACK get_life_span_handler(
 struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
         struct _cef_client_t* self) {
     DEBUG_CALLBACK("get_load_handler\n");
-    return &g_load_handler;
+    return (cef_load_handler_t *)g_load_handler;
 }
 
 ///
@@ -159,23 +160,24 @@ int CEF_CALLBACK on_process_message_received(
 }
 
 
-void initialize_cef_client(cef_client_t* client) {
+client_t * initialize_cef_client() {
     DEBUG_CALLBACK("initialize_client_handler\n");
-    client->base.size = sizeof(cef_client_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)client);
-    // callbacks
+    client_t *c = calloc(1, sizeof(client_t));
+    cef_client_t *client = (cef_client_t *)c;
+    initialize_cef_base(c);
+    client->base.add_ref((cef_base_ref_counted_t *)c);
     client->get_context_menu_handler = get_context_menu_handler;
     client->get_dialog_handler = get_dialog_handler;
     client->get_display_handler = get_display_handler;
     client->get_download_handler = get_download_handler;
     client->get_drag_handler = get_drag_handler;
     client->get_focus_handler = get_focus_handler;
-    //client->get_geolocation_handler = get_geolocation_handler;
     client->get_jsdialog_handler = get_jsdialog_handler;
     client->get_keyboard_handler = get_keyboard_handler;
-    client->get_life_span_handler = get_life_span_handler;  // Implemented!
+    client->get_life_span_handler = get_life_span_handler; 
     client->get_load_handler = get_load_handler;
     client->get_render_handler = get_render_handler;
     client->get_request_handler = get_request_handler;
     client->on_process_message_received = on_process_message_received;
+    return c;
 }

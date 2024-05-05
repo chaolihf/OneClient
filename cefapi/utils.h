@@ -10,6 +10,11 @@ cef_string_t getCefString(const char *utf8String){
     return cefString;
 }
 
+bool isEqual(const cef_string_t *source, char *compare){
+    cef_string_t newCompare=getCefString(compare);
+    return cef_string_utf16_cmp(source,&newCompare)==0;
+}
+
 // char* ConvertCefStringToChar(cef_string_userfree_t source) {
     
 //   if (source && source->length > 0 && source->str) {

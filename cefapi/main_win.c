@@ -20,7 +20,6 @@
 #include <windows.h>
 
 
-cef_client_t g_client={};
 cef_browser_settings_t g_browser_settings = {};
 bool isStartMessageLoop=false;
 
@@ -31,9 +30,10 @@ int number_add_mod(int a, int b, int mod) {
 }
 
 // Globals
-cef_life_span_handler_t g_life_span_handler = {};
-cef_load_handler_t g_load_handler={};
-cef_render_process_handler_t g_cef_render_process_handler={};
+client_t *g_client;
+life_span_handler_t *g_life_span_handler;
+load_handler *g_load_handler;
+render_process_handler *g_cef_render_process_handler;
 #ifdef windowsapp
 int main(int argc, char** argv) {
     return startCef(argc, argv);
@@ -81,16 +81,15 @@ int startCef(int argc, char** argv) {
     main_args.instance = GetModuleHandle(NULL);
 
     // Cef app
-    cef_app_t app = {};
-    initialize_cef_render_process_handler(&g_cef_render_process_handler);
-    initialize_cef_app(&app);
+    g_cef_render_process_handler=initialize_cef_render_process_handler();
+    app_t *app=initialize_cef_app();
     
     // Execute subprocesses. It is also possible to have
     // a separate executable for subprocesses by setting
     // cef_settings_t.browser_subprocess_path. In such
     // case cef_execute_process should not be called here.
     printf("cef_execute_process, argc=%d\n", argc);
-    int code = cef_execute_process(&main_args, &app, NULL);
+    int code = cef_execute_process(&main_args, (cef_app_t *)app, NULL);
     if (code >= 0) {
         _exit(code);
     }
@@ -101,12 +100,15 @@ int startCef(int argc, char** argv) {
     //不知道为什么在3版本中直接计算sizeof大小，但在最新版本中需要减去16来计算大小；
     //don't known why should substrace 16 byte for size,otherwise will cause invalid settings->[base.]size
     settings.size = sizeof(cef_settings_t);
-    settings.log_severity = LOGSEVERITY_VERBOSE; // Show only warnings/errors
+    settings.log_severity = LOGSEVERITY_ERROR; // Show only warnings/errors
     settings.no_sandbox = 1;
 
     // Initialize CEF
     printf("cef_initialize\n");
-    result=cef_initialize(&main_args, &settings, &app, NULL);
+    app=initialize_cef_app();
+    cef_app_t *cef_app = (cef_app_t *)app;
+    cef_app->base.add_ref((cef_base_ref_counted_t *)app);
+    result=cef_initialize(&main_args, &settings, cef_app, NULL);
     if(result==0){
         printf("cef_initialize failed\n");
         return 0;
@@ -116,9 +118,9 @@ int startCef(int argc, char** argv) {
     g_browser_settings.size = sizeof(cef_browser_settings_t);
     
     // Client handlers
-    initialize_cef_client(&g_client);
-    initialize_cef_life_span_handler(&g_life_span_handler);
-    initialize_cef_load_handler(&g_load_handler);
+    g_client=initialize_cef_client();
+    g_life_span_handler=initialize_cef_life_span_handler();
+    g_load_handler=initialize_cef_load_handler();
     #ifdef windowsapp
         createBrowser("aa","http://baidu.com",0);
     #endif  
@@ -173,7 +175,7 @@ int createBrowser(const char * title,const char * url,int parent_window_handle){
     // Create browser asynchronously. There is also a
     // synchronous version of this function available.
     printf("cef_browser_host_create_browser\n");
-    int result=cef_browser_host_create_browser(&window_info, &g_client, &cef_url,
+    int result=cef_browser_host_create_browser(&window_info, (cef_client_t *)g_client, &cef_url,
                                     &g_browser_settings, NULL,NULL);
     if(result==0)
     {

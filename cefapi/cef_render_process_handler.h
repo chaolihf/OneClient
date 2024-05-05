@@ -1,6 +1,9 @@
+#pragma once
+
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_load_handler_capi.h"
+#include "cef_v8handler.h"
 #include "utils.h"
 
 
@@ -19,7 +22,7 @@
       struct _cef_dictionary_value_t* extra_info){
     DEBUG_CALLBACK("on_browser_created----------------\n");
     cef_frame_t *frame=browser->get_main_frame(browser);
-    cef_string_t script=getCefString("alert('a');");
+    cef_string_t script=getCefString("alert(window.test);alert(ext.myval);alert(window.testfunc());");
     frame->execute_java_script(frame,&script,frame->get_url(frame),0);
   }
 
@@ -48,7 +51,26 @@
       struct _cef_frame_t* frame,
       struct _cef_v8context_t* context){
         DEBUG_CALLBACK("on_context_created\n");
+        if(cef_v8context_in_context() == 1) {
+          cef_v8context_t* cntx = cef_v8context_get_current_context();
+          int isValid = cntx->is_valid(cntx);
+          if(isValid == 1) {
+            cntx->enter(cntx);
+            cef_v8value_t *invocation=context->get_global(context);
+            const cef_string_t key=getCefString("test");
+            const cef_string_t value=getCefString("hello world js");
+            cef_v8value_t *helloValue=cef_v8value_create_string(&value);
+            invocation->set_value_bykey(invocation,&key,helloValue,V8_PROPERTY_ATTRIBUTE_NONE);
+
+            const cef_string_t funcKey=getCefString("testfunc");
+            const cef_string_t funcName=getCefString("testfunc");
+            invocation_handler *v8handler=initialize_v8handler();
+            cef_v8value_t  *myfunc=cef_v8value_create_function(&funcName,&v8handler->handler);
+            invocation->set_value_bykey(invocation,&funcKey,myfunc, V8_PROPERTY_ATTRIBUTE_NONE);
+            cntx->exit(cntx);
+        }
       }
+    }
 
   ///
   // Called immediately before the V8 context for a frame is released. No
@@ -108,11 +130,28 @@
         return 0;
       }
 
+  ///
+  /// Called after WebKit has been initialized.
+  ///
+  void CEF_CALLBACK on_web_kit_initialized(
+      struct _cef_render_process_handler_t* self){
+        DEBUG_CALLBACK("on_web_kit_initialized\n");
+        cef_string_t extension_name=getCefString("v8/ext");
+        cef_string_t jsCode=getCefString("var ext;\n \
+            if (!ext)\n \
+              ext = {};\n \
+            (function() {\n \
+              ext.myval = 'My Value!';\n \
+            })();");
+        
+        cef_register_extension(&extension_name,&jsCode,NULL);
+  }
 
-void initialize_cef_render_process_handler(cef_render_process_handler_t *handler){
+render_process_handler * initialize_cef_render_process_handler(){
     DEBUG_CALLBACK("initialize_cef_render_process_handler\n");
-    handler->base.size = sizeof(cef_render_process_handler_t);
-    initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
+    render_process_handler *r=calloc(1,sizeof(render_process_handler));
+    cef_render_process_handler_t *handler=(cef_render_process_handler_t *)r;
+//    handler->base.add_ref((cef_base_ref_counted_t *)r);
     handler->on_browser_created= on_browser_created;
     handler->on_browser_destroyed= on_browser_destroyed;
     handler->on_context_created= on_context_created;
@@ -120,4 +159,6 @@ void initialize_cef_render_process_handler(cef_render_process_handler_t *handler
     handler->on_uncaught_exception= on_uncaught_exception;
     handler->on_focused_node_changed= on_focused_node_changed;
     handler->on_process_message_received= on_process_message_received_for_render;
+    handler->on_web_kit_initialized=on_web_kit_initialized;
+    return r;
 }
