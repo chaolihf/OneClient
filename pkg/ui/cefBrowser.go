@@ -15,7 +15,7 @@ import (
 )
 
 func TestMenuItem() {
-	createBrowser("aaa", "http://www.sina.com.cn", 0)
+	createBrowser("aaa", "http://www.sina.com.cn", 0, 0, 0, 0, 0)
 }
 
 func InitCef() {
@@ -28,6 +28,7 @@ func InitCef() {
 	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 
-func createBrowser(title, url string, parent win.HWND) {
-	C.createBrowser(C.CString(title), C.CString(url), C.int(int(uintptr(parent))))
+func createBrowser(title, url string, parent win.HWND, x, y, width, height int) {
+	C.createBrowser(C.CString(title), C.CString(url), C.int(int(uintptr(parent))),
+		C.int(x), C.int(y), C.int(width), C.int(height))
 }

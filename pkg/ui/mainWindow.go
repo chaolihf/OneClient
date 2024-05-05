@@ -77,12 +77,12 @@ func showBrowserWindow() {
 }
 
 func createBrowserWindow() error {
-	w, err := windows.NewWindow("Browser", nil)
+	w, err := windows.NewWindow("Browser", createToolbar())
 	if err != nil {
 		return err
 	}
 	w.SetScroll(false, true)
-	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle())
+	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, 100, 800, 800)
 	return nil
 }
 
@@ -104,7 +104,7 @@ func runRobotTest() {
 	robot.RunScript(logger)
 }
 func showMainWindow() {
-	createBrowser("百度", "http://baidu.com", 0)
+	createBrowser("百度", "http://baidu.com", 0, 0, 0, 0, 0)
 }
 
 func onExit() {
@@ -118,6 +118,18 @@ func createWindow() error {
 	}
 	w.SetScroll(false, true)
 	return nil
+}
+
+func createToolbar() base.Widget {
+	widget := &goey.VBox{
+		Children: []base.Widget{
+			&goey.Label{Text: "Password input:"},
+			&goey.TextInput{
+				Value: "Some input...",
+			},
+		},
+	}
+	return widget
 }
 
 func renderWindow() base.Widget {
