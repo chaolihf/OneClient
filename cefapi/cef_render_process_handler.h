@@ -174,12 +174,12 @@ void initialize_cef_render_process_handler_direct(cef_render_process_handler_t *
     /*
       ignore this callback,because it will cause unexcepted action
     */
-    //handler->on_browser_created= on_browser_created;
+    handler->on_browser_created= on_browser_created;
     handler->on_browser_destroyed= on_browser_destroyed;
     handler->on_context_created= on_context_created;
     handler->on_context_released= on_context_released;
     handler->on_uncaught_exception= on_uncaught_exception;
-    handler->on_focused_node_changed= on_focused_node_changed;
+    // handler->on_focused_node_changed= on_focused_node_changed;
     handler->on_process_message_received= on_process_message_received_for_render;
     handler->on_web_kit_initialized=on_web_kit_initialized;
 }

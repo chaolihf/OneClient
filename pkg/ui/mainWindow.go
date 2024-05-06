@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"com.chinatelecom.oneops.client/pkg/robot"
@@ -148,17 +149,31 @@ func createToolbar() base.Widget {
 							OnChange: func(v string) {
 								addressValue = v
 							},
+							OnEnterKey: func(v string) {
+								goNewAddress()
+							},
 						},
 					},
 					&goey.Button{Text: "转到", Default: true, OnClick: func() {
 						window.Message("访问" + addressValue).WithInfo().WithTitle("提示").Show()
-						loadUrl(addressValue)
+						goNewAddress()
 					}},
 				},
 			},
 		},
 	}
 	return widget
+}
+
+/**
+ * navigate to new address
+ */
+func goNewAddress() {
+	formalUrl := strings.ToLower(addressValue)
+	if !strings.HasPrefix(formalUrl, "http://") && !strings.HasPrefix(formalUrl, "https://") {
+		addressValue = "http://" + addressValue
+	}
+	loadUrl(addressValue)
 }
 
 func renderWindow() base.Widget {
