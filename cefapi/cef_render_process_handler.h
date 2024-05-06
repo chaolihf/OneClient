@@ -21,9 +21,9 @@
       struct _cef_browser_t* browser,
       struct _cef_dictionary_value_t* extra_info){
     DEBUG_CALLBACK("on_browser_created----------------\n");
-    cef_frame_t *frame=browser->get_main_frame(browser);
-    cef_string_t script=getCefString("alert(window.test);alert(ext.myval);alert(window.testfunc());");
-    frame->execute_java_script(frame,&script,frame->get_url(frame),0);
+    // cef_frame_t *frame=browser->get_main_frame(browser);
+    // cef_string_t script=getCefString("alert(window.test);alert(ext.myval);alert(window.testfunc());");
+    // frame->execute_java_script(frame,&script,frame->get_url(frame),0);
   }
 
 
@@ -131,7 +131,7 @@
         //const cef_string_t name = getCefString("https://baidu.com");
         //frame->load_url(frame,&name);
         //cef_string_userfree_free(name);
-        return 1;
+        return 0;
       }
 
   ///
@@ -171,7 +171,10 @@ void initialize_cef_render_process_handler_direct(cef_render_process_handler_t *
     DEBUG_CALLBACK("initialize_cef_render_process_handler\n");
     handler->base.size = sizeof(cef_render_process_handler_t);
     initialize_cef_base_ref_counted((cef_base_ref_counted_t*)handler);
-    handler->on_browser_created= on_browser_created;
+    /*
+      ignore this callback,because it will cause unexcepted action
+    */
+    //handler->on_browser_created= on_browser_created;
     handler->on_browser_destroyed= on_browser_destroyed;
     handler->on_context_created= on_context_created;
     handler->on_context_released= on_context_released;
