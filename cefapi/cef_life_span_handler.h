@@ -58,7 +58,7 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
     }
     cef_browser_host_t *host=browser->get_host(browser);
     HWND hwnd=host->get_window_handle(host);
-    bool result=SetWindowPos(hwnd,HWND_TOPMOST,800,800,0,0, SWP_SHOWWINDOW );
+    bool result=SetWindowPos(hwnd,HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     char buffer[100];
     sprintf(buffer,"windowshwnd is %d,result is %d\n",hwnd,result);
     DEBUG_CALLBACK(buffer);
