@@ -31,7 +31,8 @@
         "xiosbase": "c",
         "cef_render_process_handler_capi.h": "c",
         "cef_display_handler.h": "c",
-        "cef_render_process_handler.h": "c"
+        "cef_render_process_handler.h": "c",
+        "sstream": "cpp"
     },
     "cmake.configureOnOpen": true,
 }

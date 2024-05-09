@@ -1,3 +1,5 @@
+#pragma once
+
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_load_handler_capi.h"

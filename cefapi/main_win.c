@@ -46,6 +46,11 @@ int main(int argc, char** argv) {
     return startCef(argc, argv);
 }
 #endif
+
+//all callback definition
+onBeforePopupFuncProto onBeforePopupCallback;
+
+
 int startCef(int argc, char** argv) {
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
@@ -229,4 +234,28 @@ void loadUrl(const char* url){
         frame->load_url(frame,&cef_url);
         
     }
+}
+
+void goBack(){
+    if (isBrowserProcess){
+        g_browser->go_back(g_browser);
+    }
+}
+
+void goForward(){
+    if (isBrowserProcess){
+        g_browser->go_forward(g_browser);
+    }
+}
+
+void goReload(){
+    if (isBrowserProcess){
+        g_browser->reload(g_browser);
+    }
+}
+
+
+
+void setBeforePopupCallback(onBeforePopupFuncProto callback){
+    onBeforePopupCallback=callback;
 }

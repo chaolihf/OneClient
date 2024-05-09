@@ -6,9 +6,11 @@
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_life_span_handler_capi.h"
+#include "cefapi.h"
 
 extern int g_browser_counter ;
 extern cef_browser_t *g_browser;
+extern onBeforePopupFuncProto onBeforePopupCallback;
 
 // ----------------------------------------------------------------------------
 // struct cef_life_span_handler_t
@@ -97,6 +99,12 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
       struct _cef_dictionary_value_t** extra_info,
       int* no_javascript_access){
         DEBUG_CALLBACK("on_before_popup\n");  
+        if (onBeforePopupCallback){
+            char* url=convertCefStringToChar(target_url);
+            int result=onBeforePopupCallback(url);
+            free(url);
+            return result;
+        }
         return 0;
     }
 

@@ -5,6 +5,7 @@ package ui
 /*
 #include <stdio.h>
 #include "../../cefapi/cefapi.h"
+
 */
 import "C"
 import (
@@ -25,6 +26,7 @@ func InitCef() {
 	for i, arg := range args {
 		argv[i] = C.CString(arg)
 	}
+	C.setBeforePopupCallback(C.onBeforePopupFuncProto(C.cef_onBeforePopup))
 	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 
@@ -35,4 +37,21 @@ func createBrowser(title, url string, parent win.HWND, x, y, width, height int) 
 
 func loadUrl(url string) {
 	C.loadUrl(C.CString(url))
+}
+
+func goBack() {
+	C.goBack()
+}
+func goForward() {
+	C.goForward()
+}
+
+func goReload() {
+	C.goReload()
+}
+
+//export cef_onBeforePopup
+func cef_onBeforePopup(target_url *C.char) C.int {
+	createBrowser("bbb", C.GoString(target_url), GetMainWindowHandler(), 100, 100, 1024, 1024)
+	return 1
 }

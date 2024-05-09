@@ -13,6 +13,7 @@ import (
 	"github.com/chaolihf/goey/loop"
 	"github.com/chaolihf/goey/windows"
 	"github.com/getlantern/systray"
+	"github.com/lxn/win"
 	"go.uber.org/zap"
 )
 
@@ -90,6 +91,13 @@ func createBrowserWindow() error {
 	return nil
 }
 
+func GetMainWindowHandler() win.HWND {
+	if window != nil {
+		return window.NativeHandle()
+	}
+	return 0
+}
+
 func showSettingWindow() {
 	go func() {
 		if runUILoop {
@@ -141,11 +149,20 @@ func createToolbar() base.Widget {
 			browserTab,
 			&goey.HBox{
 				Children: []base.Widget{
-					&goey.Label{Text: "地址:"},
+					&goey.Button{Text: "Back", OnClick: func() {
+						goBack()
+					}},
+					&goey.Button{Text: "Forward", OnClick: func() {
+						goForward()
+					}},
+					&goey.Button{Text: "Reload", Default: true, OnClick: func() {
+						goReload()
+					}},
+					&goey.Label{Text: "Address:"},
 					&goey.Expand{
 						Child: &goey.TextInput{
 							Value:       addressValue,
-							Placeholder: "输入访问的地址",
+							Placeholder: "Input Address",
 							OnChange: func(v string) {
 								addressValue = v
 							},

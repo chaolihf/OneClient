@@ -15,6 +15,14 @@ bool isEqual(const cef_string_t *source, char *compare){
     return cef_string_utf16_cmp(source,&newCompare)==0;
 }
 
+char * convertCefStringToChar(const cef_string_t *source) {
+    cef_string_utf8_t cefString={};
+    cef_string_utf16_to_utf8(source->str,source->length,&cefString);
+    char* result=(char *)calloc(1,cefString.length+1);
+    memcpy(result,cefString.str,cefString.length);
+    result[cefString.length]='\0';
+    return result;
+}
 // char* ConvertCefStringToChar(cef_string_userfree_t source) {
     
 //   if (source && source->length > 0 && source->str) {
