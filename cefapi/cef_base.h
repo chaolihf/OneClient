@@ -220,7 +220,7 @@ GENERATE_CEF_BASE_INITIALIZER(render_process_handler)
 // Increment the reference count.
 ///
 void CEF_CALLBACK add_ref(cef_base_ref_counted_t* self) {
-    DEBUG_CALLBACK("cef_base_ref_counted_t.add_ref\n");
+    //DEBUG_CALLBACK("cef_base_ref_counted_t.add_ref\n");
     if (DEBUG_REFERENCE_COUNTING)
         printf("+");
 }
@@ -230,7 +230,7 @@ void CEF_CALLBACK add_ref(cef_base_ref_counted_t* self) {
 // remain.
 ///
 int CEF_CALLBACK release(cef_base_ref_counted_t* self) {
-    DEBUG_CALLBACK("cef_base_ref_counted_t.release\n");
+    //DEBUG_CALLBACK("cef_base_ref_counted_t.release\n");
     if (DEBUG_REFERENCE_COUNTING)
         printf("-");
     return 1;

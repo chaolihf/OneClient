@@ -52,7 +52,7 @@ void CEF_CALLBACK on_register_custom_schemes(
 ///
 struct _cef_resource_bundle_handler_t*
         CEF_CALLBACK get_resource_bundle_handler(struct _cef_app_t* self) {
-    DEBUG_CALLBACK("get_resource_bundle_handler\n");
+    //DEBUG_CALLBACK("get_resource_bundle_handler\n");
     return NULL;
 }
 

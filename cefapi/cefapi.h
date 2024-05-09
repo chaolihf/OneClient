@@ -16,6 +16,8 @@ void goForward();
 
 void goReload();
 
+void setForegroundWindow(int window_handle);
+
 #ifndef __TEST_H__
 #define __TEST_H__
 #ifdef __cplusplus

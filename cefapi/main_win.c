@@ -187,8 +187,7 @@ int createBrowser(const char * title,const char * url,int parent_window_handle,i
         window_info.bounds.width = CW_USEDEFAULT;
         window_info.bounds.height = CW_USEDEFAULT;
     }
-    //window_info.ex_style=WS_EX_TOPMOST;
-    
+    window_info.ex_style=WS_EX_TOPMOST;    
 
     // Window info - window title
     window_info.window_name = getCefString(title);
@@ -254,6 +253,9 @@ void goReload(){
     }
 }
 
+void setForegroundWindow(int window_handle){
+    SetForegroundWindow((HWND)(intptr_t)window_handle);
+}
 
 
 void setBeforePopupCallback(onBeforePopupFuncProto callback){

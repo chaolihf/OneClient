@@ -46,7 +46,7 @@ struct _cef_dialog_handler_t* CEF_CALLBACK get_dialog_handler(
 ///
 struct _cef_display_handler_t* CEF_CALLBACK get_display_handler(
         struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_display_handler\n");
+    //DEBUG_CALLBACK("get_display_handler\n");
     //return (cef_display_handler_t *)g_display_handler;
     return &g_display_handler;
 }
@@ -124,7 +124,7 @@ struct _cef_life_span_handler_t* CEF_CALLBACK get_life_span_handler(
 ///
 struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
         struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_load_handler\n");
+    //DEBUG_CALLBACK("get_load_handler\n");
     return (cef_load_handler_t *)g_load_handler;
 }
 
@@ -142,7 +142,7 @@ struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
 ///
 struct _cef_request_handler_t* CEF_CALLBACK get_request_handler(
         struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_request_handler\n");
+    //DEBUG_CALLBACK("get_request_handler\n");
     return NULL;
 }
 

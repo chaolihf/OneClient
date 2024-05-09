@@ -56,6 +56,12 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
         // cef_string_t url=getCefString("https://baidu.com");
         // mainFrame->load_url(mainFrame,&url);
     }
+    cef_browser_host_t *host=browser->get_host(browser);
+    HWND hwnd=host->get_window_handle(host);
+    bool result=SetWindowPos(hwnd,HWND_TOPMOST,800,800,0,0, SWP_SHOWWINDOW );
+    char buffer[100];
+    sprintf(buffer,"windowshwnd is %d,result is %d\n",hwnd,result);
+    DEBUG_CALLBACK(buffer);
     g_browser_counter++;
 }
 

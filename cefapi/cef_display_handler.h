@@ -74,7 +74,7 @@
   void CEF_CALLBACK on_status_message(struct _cef_display_handler_t* self,
                                         struct _cef_browser_t* browser,
                                         const cef_string_t* value){
-    DEBUG_CALLBACK("on_status_message\n");
+    //DEBUG_CALLBACK("on_status_message\n");
   }
 
   ///
@@ -87,7 +87,7 @@
                                         const cef_string_t* message,
                                         const cef_string_t* source,
                                         int line){
-    DEBUG_CALLBACK("on_console_message\n");
+    //DEBUG_CALLBACK("on_console_message\n");
     return 0;
   }
 
@@ -112,7 +112,7 @@
       struct _cef_display_handler_t* self,
       struct _cef_browser_t* browser,
       double progress){
-      DEBUG_CALLBACK("on_loading_progress_change\n");
+      //DEBUG_CALLBACK("on_loading_progress_change\n");
   }
 
   ///
@@ -127,7 +127,7 @@
       cef_cursor_handle_t cursor,
       cef_cursor_type_t type,
       const cef_cursor_info_t* custom_cursor_info){
-        DEBUG_CALLBACK("on_cursor_change\n");
+        //DEBUG_CALLBACK("on_cursor_change\n");
         return 0;
   }
 

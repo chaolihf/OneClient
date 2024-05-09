@@ -48,6 +48,7 @@ func onReady() {
 			select {
 			case <-quitMenuItem.ClickedCh:
 				systray.Quit()
+				ShutdownCef()
 				os.Exit(0)
 			case <-settingMenuItem.ClickedCh:
 				showSettingWindow()

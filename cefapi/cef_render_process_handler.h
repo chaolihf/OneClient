@@ -50,7 +50,7 @@
       struct _cef_browser_t* browser,
       struct _cef_frame_t* frame,
       struct _cef_v8context_t* context){
-        DEBUG_CALLBACK("on_context_created\n");
+        //DEBUG_CALLBACK("on_context_created\n");
         if(cef_v8context_in_context() == 1) {
           cef_v8context_t* cntx = cef_v8context_get_current_context();
           int isValid = cntx->is_valid(cntx);
