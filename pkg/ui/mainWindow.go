@@ -88,6 +88,7 @@ func createBrowserWindow() error {
 	}
 	w.SetScroll(false, true)
 	window = w
+
 	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, 100, 800, 800)
 	return nil
 }
