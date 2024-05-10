@@ -18,6 +18,8 @@ void goReload();
 
 void setForegroundWindow(int window_handle);
 
+void setBrowserSize(int width, int height);
+
 #ifndef __TEST_H__
 #define __TEST_H__
 #ifdef __cplusplus

@@ -56,6 +56,11 @@ func goReload() {
 
 //export cef_onBeforePopup
 func cef_onBeforePopup(target_url *C.char) C.int {
-	createBrowser("bbb", C.GoString(target_url), GetMainWindowHandler(), 100, 100, 1024, 1024)
+	width, height := window.GetSize()
+	createBrowser("bbb", C.GoString(target_url), GetMainWindowHandler(), 0, toolbarHeight, width, height-toolbarHeight)
 	return 1
+}
+
+func setBrowserSize(width, height int) {
+	C.setBrowserSize(C.int(width), C.int(height))
 }

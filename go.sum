@@ -10,6 +10,8 @@ github.com/chaolihf/goey v0.9.1-0.20240426140259-eb09e5d03ace h1:hg4UcCn0bXkI8Wi
 github.com/chaolihf/goey v0.9.1-0.20240426140259-eb09e5d03ace/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
 github.com/chaolihf/goey v0.9.1-0.20240505110621-39d1049f99cb h1:JjBKRpHmeXv1ehAuNtkL4TXO8giCoaThx7m1gQ44Oyk=
 github.com/chaolihf/goey v0.9.1-0.20240505110621-39d1049f99cb/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
+github.com/chaolihf/goey v0.9.1-0.20240510074842-d05d293ce98c h1:r4SaOHqDpTz3Gb4Q46zpVqsgrqjLiMvjUU58SZjlb/Q=
+github.com/chaolihf/goey v0.9.1-0.20240510074842-d05d293ce98c/go.mod h1:ukEvV2k6cZNlM6FjeokX/FPkw33ok7SYF5kE6hkVMYk=
 github.com/chaolihf/udpgo v0.0.13 h1:PffwmW49o/WxbYD4j1T3cw7niCmMm2GzRW1gLdIWJsU=
 github.com/chaolihf/udpgo v0.0.13/go.mod h1:+MgC8ewxYznU81AmQqGz7Xp5X1M27AJEN4WKjBM9kkw=
 github.com/chzyer/logex v1.2.0/go.mod h1:9+9sk7u7pGNWYMkh0hdiL++6OeibzJccyQU4p4MedaY=

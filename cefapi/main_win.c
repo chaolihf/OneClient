@@ -261,3 +261,12 @@ void setForegroundWindow(int window_handle){
 void setBeforePopupCallback(onBeforePopupFuncProto callback){
     onBeforePopupCallback=callback;
 }
+
+void setBrowserSize(int width, int height){
+    if (isBrowserProcess){   
+        cef_browser_host_t *host=g_browser->get_host(g_browser);
+        HWND hwnd=host->get_window_handle(host);
+        bool result=SetWindowPos(hwnd,HWND_TOP, 0, 0, width, height, SWP_NOMOVE);
+    }
+
+}

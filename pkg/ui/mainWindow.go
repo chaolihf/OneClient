@@ -21,10 +21,11 @@ import (
 var icoData []byte
 
 var (
-	logger       *zap.Logger
-	runUILoop    bool = false
-	window       *windows.Window
-	addressValue string = "https://www.baidu.com/"
+	logger        *zap.Logger
+	runUILoop     bool = false
+	window        *windows.Window
+	addressValue  string = "https://www.baidu.com/"
+	toolbarHeight int    = 100
 )
 
 func ShowMain(rootLogger *zap.Logger) {
@@ -88,8 +89,9 @@ func createBrowserWindow() error {
 	}
 	w.SetScroll(false, true)
 	window = w
-
-	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, 100, 800, 800)
+	width, height := window.GetSize()
+	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, toolbarHeight, width, height-toolbarHeight)
+	w.SetOnResize(onWindowReSize)
 	return nil
 }
 
@@ -299,4 +301,9 @@ func renderWindow() base.Widget {
 		Insets: goey.DefaultInsets(),
 		Child:  widget,
 	}
+}
+
+func onWindowReSize(width, height int) bool {
+	setBrowserSize(width, height)
+	return true
 }
