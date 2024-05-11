@@ -44,7 +44,7 @@ cef_display_handler_t g_display_handler={};
 cef_render_process_handler_t g_cef_render_process_handler={};
 cef_browser_process_handler_t g_cef_browser_process_handler={};
 cef_scheme_handler_factory_t g_scheme_handler_factory={};
-cef_resource_handler_t g_resource_handler={};
+//cef_resource_handler_t g_resource_handler={};
 
 int g_browser_counter=0;
 bool isBrowserProcess=false;
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 //all callback definition
 onBeforePopupFuncProto onBeforePopupCallback;
-
+onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
 
 int startCef(int argc, char** argv) {
     // This executable is called many times, because it
@@ -114,7 +114,7 @@ int startCef(int argc, char** argv) {
     initialize_cef_render_process_handler_direct(&g_cef_render_process_handler);
     initialize_cef_browser_process_handler_direct(&g_cef_browser_process_handler);
     initialize_cef_schema_handler_factory_direct(&g_scheme_handler_factory);
-    initialize_cef_resource_handler_direct(&g_resource_handler);
+    //initialize_cef_resource_handler_direct(&g_resource_handler);
     // Cef app
     app_t *app=initialize_cef_app();
     
@@ -159,7 +159,7 @@ int startCef(int argc, char** argv) {
     //g_display_handler=initialize_display_handler();
     initialize_display_handler_direct(&g_display_handler);
     #ifdef windowsapp
-        createBrowser("aa","http://myhomepage/",0,0,0,0,0);
+        createBrowser("aa","http://myhomepage/",0,0,0,300,300);
     #endif  
     //
     if (!isStartMessageLoop){
@@ -278,6 +278,10 @@ void setForegroundWindow(int window_handle){
 
 void setBeforePopupCallback(onBeforePopupFuncProto callback){
     onBeforePopupCallback=callback;
+}
+
+void setResourceHandlerOpenCallback(onResourceHandlerOpenFuncProto callback){
+    onResourceHandlerOpenCallback=callback;
 }
 
 void setBrowserSize(int width, int height){

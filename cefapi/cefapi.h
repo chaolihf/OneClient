@@ -28,11 +28,15 @@ extern "C"{
 
 //define function pointer
 typedef int(*onBeforePopupFuncProto) (char *target_url);
+typedef int(*onResourceHandlerOpenFuncProto) (char *target_url,int request_id);
 
-//setup before poupup function callback
+//setup callback function
 void setBeforePopupCallback(onBeforePopupFuncProto s);
+void setResourceHandlerOpenCallback(onResourceHandlerOpenFuncProto s);
 
+//define in go function
 int cef_onBeforePopup(char *);
+int cef_onResourceHandlerOpen(char *,int);
 
 
 #ifdef __cplusplus

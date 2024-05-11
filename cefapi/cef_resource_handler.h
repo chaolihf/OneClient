@@ -3,8 +3,9 @@
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_resource_handler_capi.h"
-#include "cef_v8handler.h"
 #include "utils.h"
+
+  extern onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
 
   char* content_data_ =
         "<html><head><title>Scheme Test(Home Page)</title></head>"
@@ -29,8 +30,16 @@
     DEBUG_CALLBACK("resource_handler_open\n");
     *handle_request=1;
     const cef_string_userfree_t url=request->get_url(request);
+    char* requestUrl=convertCefStringToChar(url);
     cef_string_userfree_free(url);
-    return 1;
+    int result=1;
+    resource_handler *handler=(resource_handler*)self;
+    int id=handler->request_id;
+    if(onResourceHandlerOpenCallback){
+      result=onResourceHandlerOpenCallback(requestUrl,id);
+    }
+    free(requestUrl);
+    return result;
   }
 
   ///
@@ -117,6 +126,22 @@
   void CEF_CALLBACK  resource_handler_cancel(struct _cef_resource_handler_t* self){
     DEBUG_CALLBACK("resource_handler_cancel\n");
   }
+
+resource_handler * initialize_cef_resource_handler() {
+    printf("initialize_cef_resource_handler\n");
+    resource_handler *a = calloc(1, sizeof(resource_handler));
+    initialize_cef_base(a);
+    cef_resource_handler_t *handler = (cef_resource_handler_t *)a;
+    // callbacks
+    handler->cancel=resource_handler_cancel;
+    handler->read=resource_handler_read;
+    handler->skip=resource_handler_skip;
+    handler->get_response_headers=get_response_headers;
+    handler->open=resource_handler_open;
+    handler->base.add_ref((cef_base_ref_counted_t *)a);
+    return a;
+}
+
 
 void initialize_cef_resource_handler_direct(cef_resource_handler_t *handler){
     DEBUG_CALLBACK("initialize_cef_resource_handler_direct\n");

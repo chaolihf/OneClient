@@ -116,6 +116,7 @@ struct _view_delegate_t;
 struct _browser_view_delegate_t;
 struct _load_handler;
 struct _render_process_handler;
+struct _resource_handler;
 
 void initialize_life_span_handler_t_base(struct _life_span_handler_t *object);
 void initialize_view_delegate_t_base(struct _view_delegate_t *object);
@@ -127,6 +128,7 @@ void initialize_app_t_base(struct _app_t *object);
 void initialize_invocation_handler_base(struct _invocation_handler *object);
 void initialize_load_handler_base(struct _load_handler *object);
 void initialize_render_process_handler_base(struct _render_process_handler *object);
+void initialize_resource_handler_base(struct _resource_handler *object);
 
 #define initialize_cef_base(T) \
     _Generic((T), \
@@ -139,6 +141,7 @@ void initialize_render_process_handler_base(struct _render_process_handler *obje
 	struct _app_t*: initialize_app_t_base, \
 	struct _load_handler*: initialize_load_handler_base, \
 	struct _render_process_handler*: initialize_render_process_handler_base, \
+	struct _resource_handler*: initialize_resource_handler_base, \
 	struct _invocation_handler*: initialize_invocation_handler_base)(T)
 
 
@@ -215,6 +218,13 @@ IMPLEMENT_REFCOUNTING(render_process_handler)
 GENERATE_CEF_BASE_INITIALIZER(render_process_handler)
 
 
+typedef struct _resource_handler {
+	cef_resource_handler_t handler;
+	atomic_int ref_count;
+	int request_id;
+} resource_handler;
+IMPLEMENT_REFCOUNTING(resource_handler)
+GENERATE_CEF_BASE_INITIALIZER(resource_handler)
 
 ///
 // Increment the reference count.

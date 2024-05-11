@@ -3,10 +3,10 @@
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_scheme_capi.h"
-#include "cef_v8handler.h"
+#include "cef_resource_handler.h"
 #include "utils.h"
-extern cef_resource_handler_t g_resource_handler;
-
+//extern cef_resource_handler_t g_resource_handler;
+atomic_int g_request_id=ATOMIC_VAR_INIT(1);
 ///
   /// Return a new resource handler instance to handle the request or an NULL
   /// reference to allow default handling of the request. |browser| and |frame|
@@ -26,7 +26,12 @@ extern cef_resource_handler_t g_resource_handler;
         cef_string_t localUrl=getCefString("http://myhomepage/");
         if(cef_string_utf16_cmp(url,&localUrl)==0){
           cef_string_userfree_free(url);
-          return &g_resource_handler; 
+          resource_handler *handler= initialize_cef_resource_handler();
+          int newRequestId=atomic_fetch_add(&g_request_id, 1);
+          handler->request_id=newRequestId;
+          return (cef_resource_handler_t *)handler;
+          //return &g_resource_handler; 
+
         }
         else{
           cef_string_userfree_free(url);

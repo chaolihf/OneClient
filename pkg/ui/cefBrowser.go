@@ -9,6 +9,7 @@ package ui
 */
 import "C"
 import (
+	"fmt"
 	"os"
 	"unsafe"
 
@@ -27,6 +28,7 @@ func InitCef() {
 		argv[i] = C.CString(arg)
 	}
 	C.setBeforePopupCallback(C.onBeforePopupFuncProto(C.cef_onBeforePopup))
+	C.setResourceHandlerOpenCallback(C.onResourceHandlerOpenFuncProto(C.cef_onResourceHandlerOpen))
 	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 
@@ -58,6 +60,12 @@ func goReload() {
 func cef_onBeforePopup(target_url *C.char) C.int {
 	width, height := window.GetSize()
 	createBrowser("bbb", C.GoString(target_url), GetMainWindowHandler(), 0, toolbarHeight, width, height-toolbarHeight)
+	return 1
+}
+
+//export cef_onResourceHandlerOpen
+func cef_onResourceHandlerOpen(target_url *C.char, identity C.int) C.int {
+	fmt.Printf("open resource %s with identity %d\n", C.GoString(target_url), identity)
 	return 1
 }
 
