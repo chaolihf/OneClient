@@ -11,8 +11,11 @@
 #include "cefapi/cef_client.h"
 #include "cefapi/cef_life_span_handler.h"
 #include "cefapi/cef_load_handler.h"
-#include "cefapi/cef_render_process_handler.h"
 #include "cefapi/cef_display_handler.h"
+#include "cefapi/cef_render_process_handler.h"
+#include "cefapi/cef_browser_process_handler.h"
+#include "cefapi/cef_schema_handler_factory.h"
+#include "cefapi/cef_resource_handler.h"
 
 #include "include/cef_version.h"
 
@@ -31,14 +34,18 @@ int number_add_mod(int a, int b, int mod) {
 }
 
 // Globals
+char * process_type="main process";
 cef_browser_t *g_browser;
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
 //display_handler *g_display_handler;
 cef_display_handler_t g_display_handler={};
-
 cef_render_process_handler_t g_cef_render_process_handler={};
+cef_browser_process_handler_t g_cef_browser_process_handler={};
+cef_scheme_handler_factory_t g_scheme_handler_factory={};
+cef_resource_handler_t g_resource_handler={};
+
 int g_browser_counter=0;
 bool isBrowserProcess=false;
 #ifdef windowsapp
@@ -78,6 +85,15 @@ int startCef(int argc, char** argv) {
                     sprintf(message, "render process id : %lu", processId);
                     //for debug
                     //MessageBox(NULL, message, "debug process", MB_OK);
+                    process_type="renderer process";
+                    break;
+                } 
+                if (strcmp(argv[i], "--type=gpu-process") == 0) {
+                    process_type="gpu-process";
+                    break;
+                }
+                if (strcmp(argv[i], "--type=utility") == 0) {
+                    process_type="utility-process";
                     break;
                 }
             }
@@ -96,7 +112,9 @@ int startCef(int argc, char** argv) {
 
     //g_cef_render_process_handler=initialize_cef_render_process_handler();
     initialize_cef_render_process_handler_direct(&g_cef_render_process_handler);
-
+    initialize_cef_browser_process_handler_direct(&g_cef_browser_process_handler);
+    initialize_cef_schema_handler_factory_direct(&g_scheme_handler_factory);
+    initialize_cef_resource_handler_direct(&g_resource_handler);
     // Cef app
     app_t *app=initialize_cef_app();
     
@@ -141,7 +159,7 @@ int startCef(int argc, char** argv) {
     //g_display_handler=initialize_display_handler();
     initialize_display_handler_direct(&g_display_handler);
     #ifdef windowsapp
-        createBrowser("aa","http://baidu.com",0,0,0,0,0);
+        createBrowser("aa","http://myhomepage/",0,0,0,0,0);
     #endif  
     //
     if (!isStartMessageLoop){

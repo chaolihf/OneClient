@@ -2,7 +2,7 @@
 
 #include "cef_base.h"
 #include "include/capi/cef_app_capi.h"
-#include "include/capi/cef_load_handler_capi.h"
+#include "include/capi/cef_render_process_handler_capi.h"
 #include "cef_v8handler.h"
 #include "utils.h"
 

@@ -11,7 +11,7 @@
 #include "cef_render_process_handler.h"
 
 extern cef_render_process_handler_t g_cef_render_process_handler;
-
+extern cef_browser_process_handler_t g_cef_browser_process_handler;
 // ----------------------------------------------------------------------------
 // cef_app_t
 // ----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ struct _cef_resource_bundle_handler_t*
 struct _cef_browser_process_handler_t* 
         CEF_CALLBACK get_browser_process_handler(struct _cef_app_t* self) {
     DEBUG_CALLBACK("get_browser_process_handler\n");
-    return NULL;
+    return &g_cef_browser_process_handler;
 }
 
 ///

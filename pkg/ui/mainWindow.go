@@ -25,7 +25,7 @@ var (
 	runUILoop     bool = false
 	window        *windows.Window
 	addressValue  string = "https://www.baidu.com/"
-	toolbarHeight int    = 100
+	toolbarHeight int    = 95
 )
 
 func ShowMain(rootLogger *zap.Logger) {
@@ -90,7 +90,7 @@ func createBrowserWindow() error {
 	w.SetScroll(false, true)
 	window = w
 	width, height := window.GetSize()
-	createBrowser("aaa", "http://www.sina.com.cn", w.NativeHandle(), 0, toolbarHeight, width, height-toolbarHeight)
+	createBrowser("aaa", "http://myhomepage/", w.NativeHandle(), 0, toolbarHeight, width, height-toolbarHeight)
 	w.SetOnResize(onWindowReSize)
 	return nil
 }
