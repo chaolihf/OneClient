@@ -4,6 +4,8 @@ package ui
 //#cgo LDFLAGS: -L${SRCDIR}/../../cefapi -L${SRCDIR}/../../Release -lcefapi -lcef
 /*
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "../../cefapi/cefapi.h"
 
 */
@@ -71,4 +73,17 @@ func cef_onResourceHandlerOpen(target_url *C.char, identity C.int) C.int {
 
 func setBrowserSize(width, height int) {
 	C.setBrowserSize(C.int(width), C.int(height))
+}
+
+//export GetIntAndString
+func GetIntAndString(data int) (int, string) {
+	return data, "Hello from Go"
+}
+
+//export CopyDataToMemory
+func CopyDataToMemory(data *C.char, size C.int) {
+	/// 将Go字符串转换为C字符串
+	str := "Hello, World!"
+	source := []byte(str)
+	C.goCopyMemory(unsafe.Pointer(data), unsafe.Pointer(&source[0]), size)
 }

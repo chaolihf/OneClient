@@ -38,7 +38,9 @@
         "istream": "c",
         "utils.h": "c",
         "stdio.h": "c",
-        "cef_resource_handler_capi.h": "c"
+        "cef_resource_handler_capi.h": "c",
+        "stddef.h": "c",
+        "stdlib.h": "c"
     },
     "cmake.configureOnOpen": true,
 }

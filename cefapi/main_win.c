@@ -16,14 +16,10 @@
 #include "cefapi/cef_browser_process_handler.h"
 #include "cefapi/cef_schema_handler_factory.h"
 #include "cefapi/cef_resource_handler.h"
-
 #include "include/cef_version.h"
-
 #include "cefapi.h"
 #include "utils.h"
 #include <windows.h>
-
-
 cef_browser_settings_t g_browser_settings = {};
 bool isStartMessageLoop=false;
 
@@ -58,7 +54,40 @@ int main(int argc, char** argv) {
 onBeforePopupFuncProto onBeforePopupCallback;
 onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
 
+struct GetIntAndString_return {
+	long long r0;
+	struct { const char *p; long long n; } r1;
+};
+extern struct GetIntAndString_return GetIntAndString(int data);
+extern void CopyDataToMemory(char* data, int size);
+
+void goCopyMemory(void* _Dst,void const* _Src,int      _Size){
+    memcpy(_Dst,_Src,_Size);
+}
 int startCef(int argc, char** argv) {
+    // 申请一块内存
+    int size = 100;
+    char* memory = (char*)malloc(size);
+    CopyDataToMemory(memory, size);
+    // 从内存中获取数据并打印
+    printf("Data in memory: %s\n", memory);
+
+    // 释放内存
+    free(memory);
+
+
+    int intValue;
+    char* stringValue;
+
+    // 调用Go函数
+    struct GetIntAndString_return cResult=GetIntAndString(10);
+
+    // 打印返回的值
+    printf("Int value: %d\n", cResult.r0);
+    printf("String value: %s\n", cResult.r1);
+
+
+
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
     // so we can differentiate between main process and

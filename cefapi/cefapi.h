@@ -1,4 +1,5 @@
 #pragma once
+void goCopyMemory(void* _Dst,void const* _Src,int _Size);
 
 int startCef(int argc, char** argv) ;
 
@@ -29,6 +30,7 @@ extern "C"{
 //define function pointer
 typedef int(*onBeforePopupFuncProto) (char *target_url);
 typedef int(*onResourceHandlerOpenFuncProto) (char *target_url,int request_id);
+typedef int(*onResourceHandlerGetResponseHeadersFuncProto) (char *target_url,int request_id);
 
 //setup callback function
 void setBeforePopupCallback(onBeforePopupFuncProto s);
