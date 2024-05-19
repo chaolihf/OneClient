@@ -81,14 +81,6 @@ func setBrowserSize(width, height int) {
 	C.setBrowserSize(C.int(width), C.int(height))
 }
 
-//export CopyDataToMemory
-func CopyDataToMemory(data *C.char, size C.int) {
-	/// 将Go字符串转换为C字符串
-	str := "Hello, World!"
-	source := []byte(str)
-	C.goCopyMemory(unsafe.Pointer(data), unsafe.Pointer(&source[0]), size)
-}
-
 //export cef_onResourceHandlerGetResponseHeaders
 func cef_onResourceHandlerGetResponseHeaders(identity C.int) (int, string, int) {
 	return 200, "text/html", len([]byte(mainPageContent))

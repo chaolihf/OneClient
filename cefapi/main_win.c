@@ -56,22 +56,10 @@ onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
 onResourceHandlerGetResponseHeadersFuncProto  onResourceHandlerGetResponseHeadersCallback;
 onResourceHandlerReadFuncProto  onResourceHandlerReadCallback;
 
-extern void CopyDataToMemory(char* data, int size);
-
 void goCopyMemory(void* _Dst,void const* _Src,int      _Size){
     memcpy(_Dst,_Src,_Size);
 }
 int startCef(int argc, char** argv) {
-    // 申请一块内存
-    int size = 100;
-    char* memory = (char*)malloc(size);
-    CopyDataToMemory(memory, size);
-    // 从内存中获取数据并打印
-    printf("Data in memory: %s\n", memory);
-
-    // 释放内存
-    free(memory);
-
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
     // so we can differentiate between main process and

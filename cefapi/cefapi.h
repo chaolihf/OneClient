@@ -1,30 +1,33 @@
 #pragma once
 
-typedef signed char Go_Int8;
-typedef unsigned char Go_Uint8;
-typedef short Go_Int16;
-typedef unsigned short Go_Uint16;
-typedef int Go_Int32;
-typedef unsigned int Go_Uint32;
-typedef long long Go_Int64;
-typedef unsigned long long Go_Uint64;
-typedef Go_Int64 Go_Int;
-typedef Go_Uint64 Go_Uint;
-typedef size_t Go_Uintptr;
-typedef float Go_Float32;
-typedef double Go_Float64;
-typedef struct { const char *p; ptrdiff_t n; } Go_String;
-
 #ifndef GO_CGO_EXPORT_PROLOGUE_H
+typedef signed char GoInt8;
+typedef unsigned char GoUint8;
+typedef short GoInt16;
+typedef unsigned short GoUint16;
+typedef int GoInt32;
+typedef unsigned int GoUint32;
+typedef long long GoInt64;
+typedef unsigned long long GoUint64;
+typedef GoInt64 GoInt;
+typedef GoUint64 GoUint;
+typedef size_t GoUintptr;
+typedef float GoFloat32;
+typedef double GoFloat64;
+
+//#ifndef GO_CGO_GOSTRING_TYPEDEF
+	typedef struct { const char *p; ptrdiff_t n; } Go_String;
+//#endif
+
 struct cef_onResourceHandlerGetResponseHeaders_return {
-	Go_Int status;
+	GoInt status;
 	Go_String mime_type;
-    Go_Int response_length;
+    GoInt response_length;
 };
 
 struct cef_onResourceHandlerRead_return {
-	Go_Int bytes_read;
-	Go_Int has_data;
+	GoInt bytes_read;
+	GoInt has_data;
 } ;
 #endif
 
