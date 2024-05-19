@@ -3,10 +3,18 @@
 #include <string.h>
 #include "include/capi/cef_base_capi.h"
 #include <stdio.h>
+#include "cefapi.h"
+
 
 cef_string_t getCefString(const char *utf8String){
     cef_string_t cefString = {};
     cef_string_utf8_to_utf16(utf8String, strlen(utf8String),&cefString);
+    return cefString;
+}
+
+cef_string_t getCefStringFromGo(const Go_String *source){
+    cef_string_t cefString = {};
+    cef_string_utf8_to_utf16(source->p, source->n,&cefString);
     return cefString;
 }
 

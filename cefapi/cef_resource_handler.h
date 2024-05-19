@@ -6,9 +6,11 @@
 #include "utils.h"
 
   extern onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
+  extern onResourceHandlerGetResponseHeadersFuncProto  onResourceHandlerGetResponseHeadersCallback;
+  extern onResourceHandlerReadFuncProto  onResourceHandlerReadCallback;
 
   char* content_data_ =
-        "<html><head><title>Scheme Test(Home Page)</title></head>"
+        "<html><head><title>Scheme Test(Home Page) From C</title></head>"
         "<body bgcolor=\"white\">"
         "This contents of this page page are served by the resource handlle , navigate to new page <a href='https://www.sina.com.cn'>Sina</></body></html>";
   size_t offset_ = 0;
@@ -62,10 +64,21 @@
                                            int64_t* response_length,
                                            cef_string_t* redirectUrl){
     DEBUG_CALLBACK("resource handler get_response_headers\n");
-    cef_string_t mineType=getCefString("text/html");
-    response->set_mime_type(response,&mineType);
-    response->set_status(response,200);
-    *response_length = strlen(content_data_);
+    resource_handler *handler=(resource_handler*)self;
+    int id=handler->request_id;
+    struct cef_onResourceHandlerGetResponseHeaders_return result={};
+    if(onResourceHandlerGetResponseHeadersCallback){
+      result=onResourceHandlerGetResponseHeadersCallback(id);
+      cef_string_t mime_type= getCefStringFromGo(&result.mime_type);
+      response->set_mime_type(response,&mime_type);
+      response->set_status(response,result.status);
+      *response_length = result.response_length;
+    } else{
+      cef_string_t mineType=getCefString("text/html");
+      response->set_mime_type(response,&mineType);
+      response->set_status(response,200);
+      *response_length = 0;
+    }
   }
 
   ///
@@ -105,19 +118,28 @@
                           int* bytes_read,
                           struct _cef_resource_read_callback_t* callback){
     DEBUG_CALLBACK("resource_handler_read\n");
-    bool has_data = false;
-    *bytes_read = 0;
+    resource_handler *handler=(resource_handler*)self;
+    int id=handler->request_id;
+    struct cef_onResourceHandlerRead_return result={};
+    if(onResourceHandlerReadCallback){
+      result=onResourceHandlerReadCallback(id,data_out,bytes_to_read);
+      *bytes_read = result.bytes_read;
+      return result.has_data;
+    } else{
+      bool has_data = false;
+      *bytes_read = 0;
 
-    if (offset_ < strlen(content_data_)) {
-      // Copy the next block of data into the buffer.
-      int transfer_size =min(bytes_to_read, strlen(content_data_) - offset_);
-      memcpy(data_out, content_data_ + offset_, transfer_size);
-      offset_ += transfer_size;
+      if (offset_ < strlen(content_data_)) {
+        // Copy the next block of data into the buffer.
+        int transfer_size =min(bytes_to_read, strlen(content_data_) - offset_);
+        memcpy(data_out, content_data_ + offset_, transfer_size);
+        offset_ += transfer_size;
 
-      *bytes_read = transfer_size;
-      has_data = true;
+        *bytes_read = transfer_size;
+        has_data = true;
+      }
+      return has_data;
     }
-    return has_data;
   }
 
   ///

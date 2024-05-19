@@ -40,7 +40,10 @@
         "stdio.h": "c",
         "cef_resource_handler_capi.h": "c",
         "stddef.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "complex.h": "c",
+        "corecrt.h": "c",
+        "cefapi.h": "c"
     },
     "cmake.configureOnOpen": true,
 }

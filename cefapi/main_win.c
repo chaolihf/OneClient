@@ -53,12 +53,9 @@ int main(int argc, char** argv) {
 //all callback definition
 onBeforePopupFuncProto onBeforePopupCallback;
 onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
+onResourceHandlerGetResponseHeadersFuncProto  onResourceHandlerGetResponseHeadersCallback;
+onResourceHandlerReadFuncProto  onResourceHandlerReadCallback;
 
-struct GetIntAndString_return {
-	long long r0;
-	struct { const char *p; long long n; } r1;
-};
-extern struct GetIntAndString_return GetIntAndString(int data);
 extern void CopyDataToMemory(char* data, int size);
 
 void goCopyMemory(void* _Dst,void const* _Src,int      _Size){
@@ -74,19 +71,6 @@ int startCef(int argc, char** argv) {
 
     // 释放内存
     free(memory);
-
-
-    int intValue;
-    char* stringValue;
-
-    // 调用Go函数
-    struct GetIntAndString_return cResult=GetIntAndString(10);
-
-    // 打印返回的值
-    printf("Int value: %d\n", cResult.r0);
-    printf("String value: %s\n", cResult.r1);
-
-
 
     // This executable is called many times, because it
     // is also used for subprocesses. Let's print args
@@ -311,6 +295,14 @@ void setBeforePopupCallback(onBeforePopupFuncProto callback){
 
 void setResourceHandlerOpenCallback(onResourceHandlerOpenFuncProto callback){
     onResourceHandlerOpenCallback=callback;
+}
+
+void setResourceHandlerGetResponseHeadersCallback(onResourceHandlerGetResponseHeadersFuncProto callback){
+    onResourceHandlerGetResponseHeadersCallback=callback;
+}
+
+void setResourceHandlerReadCallback(onResourceHandlerReadFuncProto callback){
+    onResourceHandlerReadCallback=callback;
 }
 
 void setBrowserSize(int width, int height){
