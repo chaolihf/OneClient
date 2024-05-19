@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	localServer "com.chinatelecom.oneops.client/pkg/http"
 	"com.chinatelecom.oneops.client/pkg/localdb"
 	"github.com/kardianos/service"
 )
@@ -78,6 +79,7 @@ type program struct{}
 func (p *program) Start(s service.Service) error {
 	fmt.Println("服务运行...")
 	localdb.InitDb(logger)
+	localServer.StartServer()
 	go p.run()
 	return nil
 }
@@ -96,5 +98,6 @@ func (p *program) run() error {
 
 func (p *program) Stop(s service.Service) error {
 	localdb.CloseDb()
+	localServer.StopServer()
 	return nil
 }

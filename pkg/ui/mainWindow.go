@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"syscall"
 	"time"
 
 	"com.chinatelecom.oneops.client/pkg/robot"
@@ -15,6 +16,7 @@ import (
 	"github.com/getlantern/systray"
 	"github.com/lxn/win"
 	"go.uber.org/zap"
+	windowSvc "golang.org/x/sys/windows"
 )
 
 //go:embed client.ico
@@ -41,6 +43,7 @@ func onReady() {
 	browserMenuItem := systray.AddMenuItem("安全浏览器", "浏览器")
 	settingMenuItem := systray.AddMenuItem("设置", "打开设置")
 	mockMenuItem := systray.AddMenuItem("拨测", "网络应用测试")
+	installServiceMenuItem := systray.AddMenuItem("安装服务", "安装后台服务")
 	testMenuItem := systray.AddMenuItem("测试", "测试")
 	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
 
@@ -59,6 +62,8 @@ func onReady() {
 				showMainWindow()
 			case <-browserMenuItem.ClickedCh:
 				showBrowserWindow()
+			case <-installServiceMenuItem.ClickedCh:
+				installService()
 			case <-testMenuItem.ClickedCh:
 				TestMenuItem()
 			}
@@ -125,6 +130,28 @@ func showMainWindow() {
 
 func onExit() {
 	// clean up here
+}
+
+func installService() {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	if err != nil {
+		verb := "runas"
+		exe, _ := os.Executable()
+		cwd, _ := os.Getwd()
+		args := strings.Join(os.Args[1:], " ")
+		verbPtr, _ := syscall.UTF16PtrFromString(verb)
+		exePtr, _ := syscall.UTF16PtrFromString(exe)
+		cwdPtr, _ := syscall.UTF16PtrFromString(cwd)
+		argPtr, _ := syscall.UTF16PtrFromString(args)
+
+		var showCmd int32 = 1 //SW_NORMAL
+
+		err := windowSvc.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	fmt.Println("admin yes")
 }
 
 func createWindow() error {

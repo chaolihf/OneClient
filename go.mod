@@ -56,7 +56,7 @@ require (
 	gitlab.com/stone.code/assert v0.0.0-20191212205015-97cac9777adf // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 )

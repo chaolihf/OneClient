@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTTPS Example</title>
+    <script>
+        function fetchSecurityData() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("response").innerHTML = this.responseText;
+                }
+            };
+            xhttp.withCredentials = false;
+            xhttp.open("GET", "https://www.myexp.com", true);
+            xhttp.send();
+        }
+        function fetchData() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("response").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "http://www.myexp.com:8080", true);
+            xhttp.send();
+        }
+    </script>
+</head>
+<body>
+    <h1>HTTPS Example</h1>
+    <button onclick="fetchSecurityData()">Fetch Data(Https)</button>
+    <button onclick="fetchData()">Fetch Data(Http)</button>
+    <div id="response"></div>
+</body>
+</html>
