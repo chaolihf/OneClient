@@ -42,7 +42,7 @@
                 if (ws) {
                     return false;
                 }
-                ws = new WebSocket("wss://127.0.0.1:443/echo", null, null, null, null, { rejectUnauthorized: false });
+                ws = new WebSocket("wss://127.0.0.1:443/echo");
                 ws.onopen = function(evt) {
                     print("OPEN");
                 }
