@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"com.chinatelecom.oneops.client/pkg/localdb"
 	"github.com/kardianos/service"
 )
 
@@ -76,6 +77,7 @@ type program struct{}
 
 func (p *program) Start(s service.Service) error {
 	fmt.Println("服务运行...")
+	localdb.InitDb(logger)
 	go p.run()
 	return nil
 }
@@ -86,9 +88,13 @@ func (p *program) run() error {
 		select {
 		case tm := <-ticker.C:
 			logger.Infof("Still running at %v...", tm)
+			localdb.PingNetwork()
+
 		}
 	}
 }
+
 func (p *program) Stop(s service.Service) error {
+	localdb.CloseDb()
 	return nil
 }
