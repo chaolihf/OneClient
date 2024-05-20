@@ -64,6 +64,7 @@ func StartSecurityServer() {
 
 func StartServer() {
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/echo", echo)
 	server = &http.Server{
 		Addr: "localhost:8080",
 	}

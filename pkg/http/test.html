@@ -42,6 +42,27 @@
                 if (ws) {
                     return false;
                 }
+                ws = new WebSocket("ws://127.0.0.1:8080/echo");
+                ws.onopen = function(evt) {
+                    print("OPEN");
+                }
+                ws.onclose = function(evt) {
+                    print("CLOSE");
+                    ws = null;
+                }
+                ws.onmessage = function(evt) {
+                    print("RESPONSE: " + evt.data);
+                }
+                ws.onerror = function(evt) {
+                    print("ERROR: " + evt.data);
+                }
+                return false;
+            };
+
+            document.getElementById("openSecurity").onclick = function(evt) {
+                if (ws) {
+                    return false;
+                }
                 ws = new WebSocket("wss://127.0.0.1:443/echo");
                 ws.onopen = function(evt) {
                     print("OPEN");
@@ -93,7 +114,8 @@
         You can change the message and send multiple times.
         <p>
         <form>
-        <button id="open">Open</button>
+        <button id="open">Open WebSocket</button>
+        <button id="openSecurity">Open Security WebSocket</button>
         <button id="close">Close</button>
         <p><input id="input" type="text" value="Hello world!">
         <button id="send">Send</button>
