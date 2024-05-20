@@ -32,6 +32,7 @@ int number_add_mod(int a, int b, int mod) {
 // Globals
 char * process_type="main process";
 cef_browser_t *g_browser;
+HWND g_hwnd;
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
@@ -295,9 +296,9 @@ void setResourceHandlerReadCallback(onResourceHandlerReadFuncProto callback){
 
 void setBrowserSize(int width, int height){
     if (isBrowserProcess){   
-        cef_browser_host_t *host=g_browser->get_host(g_browser);
-        HWND hwnd=host->get_window_handle(host);
-        bool result=SetWindowPos(hwnd,HWND_TOP, 0, 0, width, height, SWP_NOMOVE);
+        // cef_browser_host_t *host=g_browser->get_host(g_browser);
+        // HWND hwnd=host->get_window_handle(host);
+        bool result=SetWindowPos(g_hwnd,HWND_TOP, 0, 0, width, height, SWP_NOMOVE);
     }
 
 }

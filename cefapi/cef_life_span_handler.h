@@ -10,6 +10,7 @@
 
 extern int g_browser_counter ;
 extern cef_browser_t *g_browser;
+extern HWND g_hwnd;
 extern onBeforePopupFuncProto onBeforePopupCallback;
 
 // ----------------------------------------------------------------------------
@@ -53,6 +54,7 @@ void CEF_CALLBACK on_after_created (struct _cef_life_span_handler_t* self,
     g_browser=browser;
     cef_browser_host_t *host=browser->get_host(browser);
     HWND hwnd=host->get_window_handle(host);
+    g_hwnd=hwnd;
     bool result=SetWindowPos(hwnd,HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     g_browser_counter++;
 }
