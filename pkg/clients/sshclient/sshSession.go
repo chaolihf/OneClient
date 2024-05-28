@@ -1,8 +1,12 @@
 package sshclient
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/bramvdbogaerde/go-scp"
 	"github.com/pkg/sftp"
@@ -15,13 +19,12 @@ type SshSession struct {
 }
 
 func NewSshSession(hostNameAndPort string, userName string, password string, timeout int) *SshSession {
-	var hostKey ssh.PublicKey
 	config := &ssh.ClientConfig{
 		User: userName,
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
-		HostKeyCallback: ssh.FixedHostKey(hostKey),
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 	client, err := ssh.Dial("tcp", hostNameAndPort, config)
 	if err != nil {
@@ -37,6 +40,50 @@ func NewSshSession(hostNameAndPort string, userName string, password string, tim
 	}
 }
 
+/*
+ExecuteCommand 执行命令，当需要
+*/
+func (thisSession *SshSession) ExecuteMoreCommand(command string, moreCommand string, prompt string) (string, error) {
+	var result string
+	var err error
+	if thisSession.session != nil {
+		stdin, err := thisSession.session.StdinPipe()
+		if err != nil {
+			return "Failed to create stdin pipe", err
+		}
+		stdout, err := thisSession.session.StdoutPipe()
+		if err != nil {
+			return "Failed to create stdout pipe", err
+		}
+		if err := thisSession.session.Start(command); err != nil {
+			return "Failed to start command", err
+		}
+		buf := make([]byte, 1024)
+		var output bytes.Buffer
+		for {
+			n, err := stdout.Read(buf)
+			if err != nil {
+				if err == io.EOF {
+					break
+				}
+			}
+			output.Write(buf[:n])
+			bufferContent := output.String()
+			if strings.Contains(bufferContent, moreCommand) {
+				result = result + strings.Replace(bufferContent, moreCommand, "", 1)
+				// 发送空格字符以显示下一页
+				fmt.Fprintf(stdin, " ")
+				time.Sleep(100 * time.Millisecond)
+				output.Reset()
+			} else if strings.Contains(bufferContent, prompt) {
+				result = result + strings.Replace(bufferContent, prompt, "", 1)
+				break
+			}
+		}
+	}
+	return result, err
+}
+
 func (thisSession *SshSession) ExecuteCommand(command string) (string, error) {
 	var output []byte
 	var err error
@@ -47,7 +94,9 @@ func (thisSession *SshSession) ExecuteCommand(command string) (string, error) {
 }
 
 func (thisSession *SshSession) Close() {
-
+	if thisSession.session != nil {
+		thisSession.session.Close()
+	}
 }
 
 func (thisSession *SshSession) UploadFile(localFilePath string, remoteFilePath string) {
