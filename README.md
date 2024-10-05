@@ -20,7 +20,19 @@ rsrc -manifest main.manifest -ico client.ico -o main.syso
 网站下载https://cef-builds.spotifycdn.com/index.html版本包，将发布包下面的resource，release目录拷贝到此项目的release目录下。如果出现异常情况下可以将debug目录下文件拷贝过来，这样可以报一些异常
 
 # 其他说明
-引入并修改https://github.com/deluan/bring，实现对guacd的代理访问和渲染
+## 引入并修改https://github.com/deluan/bring，实现对guacd的代理访问和渲染
+## cefclient编译和调试
+参考cef版本包中的CMakeLists.txt的说明说明进行安装
+安装Visual Studio 2022，选择desktop开发，选择 C++
+进入到版本目录
+mkdir build 
+cd build
+cmake -G "Visual Studio 17" -A x64 ..
+使用vs2022打开build\cef.sln，选择生成>生成解决方案
+如果需要调试，可以在cefclient_win.cc中RunMain方法后增加Sleep(20000);
+使用调试菜单>附加到进程，选择cefclient.exe，设置断点进行调试
+
+
 ## 服务端证书
 需要使用cmd/uiExperienceService/generateKey.bat生成证书，注意其中需要在http.ext中配置证书绑定的域名或IP地址，否则导入windows下的根证书也是没有用的，仍然显示不安全的网站。
 在管理员权限下执行certutil -addstore -f "Root" server.crt

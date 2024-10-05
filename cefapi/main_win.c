@@ -138,7 +138,7 @@ int startCef(int argc, char** argv) {
     settings.size = sizeof(cef_settings_t);
     settings.log_severity = LOGSEVERITY_ERROR; // Show only warnings/errors
     settings.no_sandbox = 1;
-    settings.windowless_rendering_enabled = 1;
+    //settings.windowless_rendering_enabled = 1;
 
     // Initialize CEF
     printf("cef_initialize\n");
