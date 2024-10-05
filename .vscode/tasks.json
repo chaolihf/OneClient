@@ -48,7 +48,7 @@
                 "-g",
                 "${workspaceFolder}\\cefapi\\main_win.c",
                 "-o",
-                "${workspaceFolder}\\Release\\windowshelper.exe",
+                "${workspaceFolder}\\Release\\oneclient.exe",
                 "-L${workspaceFolder}\\Release",
                 "-lcef",
                 "-I${workspaceFolder}"

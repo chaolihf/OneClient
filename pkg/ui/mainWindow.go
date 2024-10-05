@@ -37,14 +37,15 @@ func ShowMain(rootLogger *zap.Logger) {
 
 func onReady() {
 	systray.SetIcon(icoData)
-	systray.SetTitle("WindowsHelper")
-	systray.SetTooltip("客户端助理")
+	systray.SetTitle("统一客户端")
+	systray.SetTooltip("客户端")
 	mainPageMenuItem := systray.AddMenuItem("首页", "首页")
 	browserMenuItem := systray.AddMenuItem("安全浏览器", "浏览器")
 	settingMenuItem := systray.AddMenuItem("设置", "打开设置")
 	mockMenuItem := systray.AddMenuItem("拨测", "网络应用测试")
 	installServiceMenuItem := systray.AddMenuItem("安装服务", "安装后台服务")
 	testMenuItem := systray.AddMenuItem("测试", "测试")
+	remoteDesktopMenuItem := systray.AddMenuItem("远程桌面", "远程桌面")
 	quitMenuItem := systray.AddMenuItem("退出", "完全退出应用")
 
 	go func() {
@@ -66,9 +67,15 @@ func onReady() {
 				installService()
 			case <-testMenuItem.ClickedCh:
 				TestMenuItem()
+			case <-remoteDesktopMenuItem.ClickedCh:
+				showRemoteDesktop()
 			}
 		}
 	}()
+}
+
+func showRemoteDesktop() {
+	ShowRemoteDesktop()
 }
 
 func showBrowserWindow() {

@@ -8,7 +8,7 @@
             "name": "调试Render进程",
             "type": "cppdbg",
             "request": "attach",
-            "program": "${workspaceFolder}\\Release\\windowshelper.exe",
+            "program": "${workspaceFolder}\\Release\\oneclient.exe",
             "MIMode": "gdb",
             "miDebuggerPath": "gdb.exe",
             "setupCommands": [
@@ -28,7 +28,7 @@
             "name": "Run C Test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\Release\\windowshelper.exe",
+            "program": "${workspaceFolder}\\Release\\oneclient.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}\\Release",

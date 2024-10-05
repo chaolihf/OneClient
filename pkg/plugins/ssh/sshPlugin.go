@@ -6,7 +6,6 @@ package sshPlugin
 
 import (
 	"go.uber.org/zap"
-	"golang.org/x/crypto/ssh"
 )
 
 // SshScriptPlugin 实现了IScriptPlugin接口的ssh插件
@@ -39,6 +38,6 @@ func (thisPlugin *SshScriptPlugin) SetLogger(logger *zap.Logger) {
 }
 
 func (thisPlugin *SshScriptPlugin) probe(target string) bool {
-	client, err := ssh.Dial("tcp", target, config)
+	//client, err := ssh.Dial("tcp", target, config)
 	return false
 }

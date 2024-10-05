@@ -133,7 +133,7 @@ struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
 ///
 struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
         struct _cef_client_t* self) {
-    DEBUG_CALLBACK("get_render_handler\n");
+    DEBUG_CALLBACK("--------get_render_handler\n");
     return NULL;
 }
 

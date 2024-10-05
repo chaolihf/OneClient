@@ -21,7 +21,9 @@ func main() {
 	fmt.Println("start windows helper ", args)
 	if len(args) == 1 {
 		go ui.InitCef()
-		ui.ShowMain(logger)
+		go ui.ShowMain(logger)
+		ui.ShowRemoteDesktop()
+
 	} else {
 		ui.InitCef()
 	}

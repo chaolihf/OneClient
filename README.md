@@ -17,7 +17,7 @@ rsrc -manifest main.manifest -ico client.ico -o main.syso
 4. pacman -S --needed base-devel mingw-w64-x86_64-toolchain
 如果出现无法找到atomic_load等错误时，可以尝试使用visual studio 2019+来进行编译
 # 运行
-需要将发布包下面的resource，release目录拷贝到此项目的release目录下。如果出现异常情况下可以将debug目录下文件拷贝过来，这样可以报一些异常
+网站下载https://cef-builds.spotifycdn.com/index.html版本包，将发布包下面的resource，release目录拷贝到此项目的release目录下。如果出现异常情况下可以将debug目录下文件拷贝过来，这样可以报一些异常
 
 # 其他说明
 ## 服务端证书
