@@ -50,6 +50,7 @@ func ShowTerminal(bringApp fyne.App, protocol, hostname, port, username, passwor
 		}))
 		content := container.New(layout.NewVBoxLayout(), leftContent, bringDisplay)
 		w.SetContent(content)
+		w.Canvas().Focus(bringDisplay)
 		return w, nil
 	}
 }
