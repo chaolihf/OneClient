@@ -9,6 +9,8 @@
 
 extern life_span_handler_t *g_life_span_handler;
 extern load_handler *g_load_handler;
+extern render_handler *g_render_handler;
+
 //extern display_handler *g_display_handler;
 extern cef_display_handler_t g_display_handler;
 
@@ -133,8 +135,10 @@ struct _cef_load_handler_t* CEF_CALLBACK get_load_handler(
 ///
 struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
         struct _cef_client_t* self) {
-    DEBUG_CALLBACK("--------get_render_handler\n");
-    return NULL;
+    DEBUG_CALLBACK("get render handler\n");
+    cef_render_handler_t * handler=(cef_render_handler_t *)g_render_handler;
+    handler->base.add_ref((cef_base_ref_counted_t *)g_render_handler);
+    return handler;
 }
 
 ///

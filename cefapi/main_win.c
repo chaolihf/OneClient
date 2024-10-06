@@ -11,6 +11,7 @@
 #include "cefapi/cef_client.h"
 #include "cefapi/cef_life_span_handler.h"
 #include "cefapi/cef_load_handler.h"
+#include "cefapi/cef_render_handler.h"
 #include "cefapi/cef_display_handler.h"
 #include "cefapi/cef_render_process_handler.h"
 #include "cefapi/cef_browser_process_handler.h"
@@ -22,6 +23,7 @@
 #include <windows.h>
 cef_browser_settings_t g_browser_settings = {};
 bool isStartMessageLoop=false;
+bool isOffScreenRending=false;
 
 int globalValue=0;
 int number_add_mod(int a, int b, int mod) {
@@ -36,6 +38,8 @@ HWND g_hwnd;
 client_t *g_client;
 life_span_handler_t *g_life_span_handler;
 load_handler *g_load_handler;
+render_handler *g_render_handler;
+
 //display_handler *g_display_handler;
 cef_display_handler_t g_display_handler={};
 cef_render_process_handler_t g_cef_render_process_handler={};
@@ -138,8 +142,9 @@ int startCef(int argc, char** argv) {
     settings.size = sizeof(cef_settings_t);
     settings.log_severity = LOGSEVERITY_ERROR; // Show only warnings/errors
     settings.no_sandbox = 1;
-    //settings.windowless_rendering_enabled = 1;
-
+    if (isOffScreenRending){
+        settings.windowless_rendering_enabled = 1;
+    }
     // Initialize CEF
     printf("cef_initialize\n");
     app=initialize_cef_app();
@@ -159,6 +164,7 @@ int startCef(int argc, char** argv) {
     g_client=initialize_cef_client();
     g_life_span_handler=initialize_cef_life_span_handler();
     g_load_handler=initialize_cef_load_handler();
+    g_render_handler=initialize_cef_render_handler();
     //g_display_handler=initialize_display_handler();
     initialize_display_handler_direct(&g_display_handler);
     #ifdef windowsapp
@@ -191,6 +197,9 @@ void shutdownCef(){
 int createBrowser(const char * title,const char * url,int parent_window_handle,int x,int y,int width,int height){
     // Window info
     cef_window_info_t window_info = {};
+    if (isOffScreenRending){
+        window_info.windowless_rendering_enabled=1;
+    }
     window_info.style =  WS_CLIPCHILDREN \
             | WS_CLIPSIBLINGS | WS_VISIBLE  ;
     if(parent_window_handle!=0){

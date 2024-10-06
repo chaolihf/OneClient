@@ -43,7 +43,8 @@
         "stdlib.h": "c",
         "complex.h": "c",
         "corecrt.h": "c",
-        "cefapi.h": "c"
+        "cefapi.h": "c",
+        "cef_version.h": "c"
     },
     "cmake.configureOnOpen": true,
 }

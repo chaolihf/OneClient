@@ -32,6 +32,51 @@ cmake -G "Visual Studio 17" -A x64 ..
 如果需要调试，可以在cefclient_win.cc中RunMain方法后增加Sleep(20000);
 使用调试菜单>附加到进程，选择cefclient.exe，设置断点进行调试
 
+## 增加一个处理器
+在cef_base中声明一个结构
+
+typedef struct _render_handler {
+	cef_render_handler_t handler;
+	atomic_int ref_count;
+} render_handler;
+
+IMPLEMENT_REFCOUNTING(render_handler)
+GENERATE_CEF_BASE_INITIALIZER(render_handler)
+
+在initialize_cef_base中增加
+struct _render_handler;
+struct _render_handler*: initialize_render_handler_base, \
+void initialize_render_handler_base(struct _render_handler *object);
+
+
+增加一个cef_render_handler.h文件
+增加对原始头文件的引用
+#include "include/capi/cef_render_handler_capi.h"
+拷贝cef_render_handler_capi中cef_render_handler_t中的方法到cef_render_handler.h中
+如声明为如下的函数
+struct _cef_accessibility_handler_t*(CEF_CALLBACK* get_accessibility_handler)(
+      struct _cef_render_handler_t* self);
+修改为
+struct _cef_accessibility_handler_t* CEF_CALLBACK get_accessibility_handler(
+      struct _cef_render_handler_t* self){
+
+}
+在main_win.c中增加
+#include "cefapi/cef_render_handler.h"
+声明全局变量
+render_handler *g_render_handler;
+在startCef中进行初始化
+g_render_handler=initialize_cef_render_handler();
+在cef_client.h中增加
+extern render_handler *g_render_handler;
+在获取实例方法处实现相关方法
+struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
+        struct _cef_client_t* self) {
+    DEBUG_CALLBACK("get render handler\n");
+    cef_render_handler_t * handler=(cef_render_handler_t *)g_render_handler;
+    handler->base.add_ref((cef_base_ref_counted_t *)g_render_handler);
+    return handler;
+}
 
 ## 服务端证书
 需要使用cmd/uiExperienceService/generateKey.bat生成证书，注意其中需要在http.ext中配置证书绑定的域名或IP地址，否则导入windows下的根证书也是没有用的，仍然显示不安全的网站。

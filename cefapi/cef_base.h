@@ -115,6 +115,7 @@ struct _display_handler;
 struct _view_delegate_t;
 struct _browser_view_delegate_t;
 struct _load_handler;
+struct _render_handler;
 struct _render_process_handler;
 struct _resource_handler;
 
@@ -127,6 +128,7 @@ void initialize_client_t_base(struct _client_t *object);
 void initialize_app_t_base(struct _app_t *object);
 void initialize_invocation_handler_base(struct _invocation_handler *object);
 void initialize_load_handler_base(struct _load_handler *object);
+void initialize_render_handler_base(struct _render_handler *object);
 void initialize_render_process_handler_base(struct _render_process_handler *object);
 void initialize_resource_handler_base(struct _resource_handler *object);
 
@@ -140,6 +142,7 @@ void initialize_resource_handler_base(struct _resource_handler *object);
 	struct _client_t*: initialize_client_t_base, \
 	struct _app_t*: initialize_app_t_base, \
 	struct _load_handler*: initialize_load_handler_base, \
+	struct _render_handler*: initialize_render_handler_base, \
 	struct _render_process_handler*: initialize_render_process_handler_base, \
 	struct _resource_handler*: initialize_resource_handler_base, \
 	struct _invocation_handler*: initialize_invocation_handler_base)(T)
@@ -208,6 +211,13 @@ typedef struct _load_handler {
 IMPLEMENT_REFCOUNTING(load_handler)
 GENERATE_CEF_BASE_INITIALIZER(load_handler)
 
+typedef struct _render_handler {
+	cef_render_handler_t handler;
+	atomic_int ref_count;
+} render_handler;
+
+IMPLEMENT_REFCOUNTING(render_handler)
+GENERATE_CEF_BASE_INITIALIZER(render_handler)
 
 typedef struct _render_process_handler {
 	cef_render_process_handler_t handler;
