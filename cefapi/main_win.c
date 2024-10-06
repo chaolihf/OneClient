@@ -313,3 +313,9 @@ void setBrowserSize(int width, int height){
     }
 
 }
+
+void goSendMouseEvent(){
+    if (isBrowserProcess){
+        //g_browser->get_host()->send_mouse_click_event(g_browser->get_host(),
+    }
+}

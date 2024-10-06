@@ -23,6 +23,7 @@ var mainPageContent = "<html><head><title>Scheme Test(Home Page) From Go</title>
 var offset_ int = 0
 
 func TestMenuItem() {
+	GoSendMouseEvent()
 	createBrowser("aaa", "http://www.sina.com.cn", 0, 0, 0, 0, 0)
 }
 
@@ -62,6 +63,10 @@ func goForward() {
 
 func goReload() {
 	C.goReload()
+}
+
+func GoSendMouseEvent() {
+	C.goSendMouseEvent()
 }
 
 //export cef_onBeforePopup

@@ -77,6 +77,13 @@ struct _cef_render_handler_t* CEF_CALLBACK get_render_handler(
     handler->base.add_ref((cef_base_ref_counted_t *)g_render_handler);
     return handler;
 }
+## 增加一个方法
+main_win.c中增加一个方法
+goSendMouseEvent
+cefapi.h中增加一个方法定义
+void goSendMouseEvent();
+在cefBrowser.go中
+使用C.goSendMouseEvent()
 
 ## 服务端证书
 需要使用cmd/uiExperienceService/generateKey.bat生成证书，注意其中需要在http.ext中配置证书绑定的域名或IP地址，否则导入windows下的根证书也是没有用的，仍然显示不安全的网站。

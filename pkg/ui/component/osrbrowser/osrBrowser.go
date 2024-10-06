@@ -4,19 +4,11 @@ import (
 	"image"
 	"image/color"
 
-	"com.chinatelecom.oneops.client/pkg/terminal/bring"
-
+	"com.chinatelecom.oneops.client/pkg/ui/component"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
 )
-
-type WindowlessClient interface {
-	SendMouse(p image.Point, pressedButtons ...bring.MouseButton) error
-	OnSync(f bring.OnSyncFunc)
-	Screen() (image image.Image, lastUpdate int64)
-	SendKey(key bring.KeyCode, pressed bool) error
-}
 
 type osrBrowserRenderer struct {
 	objects []fyne.CanvasObject
@@ -67,11 +59,11 @@ type OsrBrowser struct {
 	lastUpdate int64
 
 	Display image.Image
-	Client  WindowlessClient
+	Client  component.WindowlessClient
 }
 
 // Creates a new BringDisplay and does all the heavy lifting, setting up all event handlers
-func NewOsrBrowser(client WindowlessClient, width, height int) *OsrBrowser {
+func NewOsrBrowser(client component.WindowlessClient, width, height int) *OsrBrowser {
 	empty := image.NewNRGBA(image.Rect(0, 0, width-1, height-1))
 
 	b := &OsrBrowser{

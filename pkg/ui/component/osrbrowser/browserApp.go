@@ -13,6 +13,7 @@ type OsrBrowserClient struct {
 
 func (r *OsrBrowserClient) SendMouse(p image.Point, pressedButtons ...bring.MouseButton) error {
 	fmt.Println("SendMouse")
+	//ui.GoSendMouseEvent()
 	return nil
 }
 
