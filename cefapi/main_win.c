@@ -60,6 +60,7 @@ onBeforePopupFuncProto onBeforePopupCallback;
 onResourceHandlerOpenFuncProto  onResourceHandlerOpenCallback;
 onResourceHandlerGetResponseHeadersFuncProto  onResourceHandlerGetResponseHeadersCallback;
 onResourceHandlerReadFuncProto  onResourceHandlerReadCallback;
+onRenderHandlerPaintFuncProto  onRenderHandlerPaintCallback;
 
 void goCopyMemory(void* _Dst,void const* _Src,int      _Size){
     memcpy(_Dst,_Src,_Size);
@@ -305,6 +306,9 @@ void setResourceHandlerReadCallback(onResourceHandlerReadFuncProto callback){
     onResourceHandlerReadCallback=callback;
 }
 
+void setRenderHandlerPaintCallback(onRenderHandlerPaintFuncProto callback){
+    onRenderHandlerPaintCallback=callback;
+}
 void setBrowserSize(int width, int height){
     if (isBrowserProcess){   
         // cef_browser_host_t *host=g_browser->get_host(g_browser);

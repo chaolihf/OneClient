@@ -38,6 +38,7 @@ func InitCef() {
 	C.setResourceHandlerOpenCallback(C.onResourceHandlerOpenFuncProto(C.cef_onResourceHandlerOpen))
 	C.setResourceHandlerGetResponseHeadersCallback(C.onResourceHandlerGetResponseHeadersFuncProto(C.cef_onResourceHandlerGetResponseHeaders))
 	C.setResourceHandlerReadCallback(C.onResourceHandlerReadFuncProto(C.cef_onResourceHandlerRead))
+	//C.setRenderHandlerPaintCallback(C.onRenderHandlerPaintFuncProto(C.cef_onRenderHandlerPaint))
 	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 

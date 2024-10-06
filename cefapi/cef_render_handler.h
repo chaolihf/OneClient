@@ -4,6 +4,9 @@
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_render_handler_capi.h"
 #include "utils.h"
+
+extern onRenderHandlerPaintFuncProto  onRenderHandlerPaintCallback;
+
 // 定义BGRA颜色结构体
 typedef struct {
     uint8_t blue;
@@ -202,6 +205,10 @@ void flipVertical(const void* buffer, void* flippedBuffer, int width, int height
                                int width,
                                int height){
     DEBUG_CALLBACK("on_paint\n");
+    if (onRenderHandlerPaintCallback){
+      onRenderHandlerPaintCallback(type,dirtyRectsCount,dirtyRects->x,dirtyRects->y,
+        dirtyRects->width,dirtyRects->height,buffer,width,height);
+    }
     void* flippedBuffer = malloc(width * height * sizeof(BGRAColor));
     if (flippedBuffer == NULL) {
         perror("Memory allocation failed");

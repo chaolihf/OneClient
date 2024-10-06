@@ -84,6 +84,43 @@ cefapi.h中增加一个方法定义
 void goSendMouseEvent();
 在cefBrowser.go中
 使用C.goSendMouseEvent()
+## 增加一个回调方法
+cefapi.h中
+定义返回数据格式
+struct cef_onRenderHandlerPaint_return {
+	GoInt type;
+	GoUint64 dirtyRectsCount;
+	GoInt dirtyRects_x;
+	GoInt dirtyRects_y;
+	GoInt dirtyRects_width;
+	GoInt dirtyRects_height;
+	GoInt buffer;
+	GoInt width;
+	GoInt height;
+} ;
+增加一个方法函数指针
+typedef struct cef_onRenderHandlerPaint_return(*onRenderHandlerPaintFuncProto) (int type,long long dirtyRectsCount,int dirtyRects_x,int dirtyRects_y,int dirtyRects_width,int dirtyRects_height,void* buffer,int width,int height);
+定义函数原型
+void setRenderHandlerPaintCallback(onRenderHandlerPaintFuncProto s);
+定义导出到Go的函数
+struct cef_onRenderHandlerPaint_return cef_onRenderHandlerPaint(int,long long,int,int,int,int,void*,int,int);
+在main_win.c中定义回调
+onRenderHandlerPaintFuncProto  onRenderHandlerPaintCallback;
+定义函数
+void setRenderHandlerPaintCallback(onRenderHandlerPaintFuncProto callback){
+    onRenderHandlerPaintCallback=callback;
+}
+在cef_render_hander.h实现中
+extern onRenderHandlerPaintFuncProto  onRenderHandlerPaintCallback;
+
+if (onRenderHandlerPaintCallback){
+      onRenderHandlerPaintCallback(type,dirtyRectsCount,dirtyRects->x,dirtyRects->y,
+      dirtyRects->width,dirtyRects->height,buffer,width,height);
+}
+
+在cefBrowser.go中初始化
+C.setRenderHandlerPaintCallback(C.onRenderHandlerPaintFuncProto(C.cef_onRenderHandlerPaint))
+
 
 ## 服务端证书
 需要使用cmd/uiExperienceService/generateKey.bat生成证书，注意其中需要在http.ext中配置证书绑定的域名或IP地址，否则导入windows下的根证书也是没有用的，仍然显示不安全的网站。
