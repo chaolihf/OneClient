@@ -23,7 +23,7 @@
 #include <windows.h>
 cef_browser_settings_t g_browser_settings = {};
 bool isStartMessageLoop=false;
-bool isOffScreenRending=false;
+bool isOffScreenRending=true;
 
 int globalValue=0;
 int number_add_mod(int a, int b, int mod) {
@@ -199,6 +199,7 @@ int createBrowser(const char * title,const char * url,int parent_window_handle,i
     cef_window_info_t window_info = {};
     if (isOffScreenRending){
         window_info.windowless_rendering_enabled=1;
+        window_info.shared_texture_enabled=0;
     }
     window_info.style =  WS_CLIPCHILDREN \
             | WS_CLIPSIBLINGS | WS_VISIBLE  ;

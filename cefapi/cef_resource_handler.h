@@ -12,7 +12,7 @@
   char* content_data_ =
         "<html><head><title>Scheme Test(Home Page) From C</title></head>"
         "<body bgcolor=\"white\">"
-        "This contents of this page page are served by the resource handlle , navigate to new page <a href='https://www.sina.com.cn'>Sina</></body></html>";
+        "------------------------This contents of this page page are served by the resource handlle , navigate to new page <a href='https://www.sina.com.cn'>Sina</></body></html>";
   size_t offset_ = 0;
 
   ///

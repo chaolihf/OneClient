@@ -4,6 +4,94 @@
 #include "include/capi/cef_app_capi.h"
 #include "include/capi/cef_render_handler_capi.h"
 #include "utils.h"
+// 定义BGRA颜色结构体
+typedef struct {
+    uint8_t blue;
+    uint8_t green;
+    uint8_t red;
+    uint8_t alpha;
+} BGRAColor;
+
+// 写入BGRA图像数据到文件
+void writeBGRAToFile(const char* filename, const void* buffer, int width, int height) {
+    FILE* file = fopen(filename, "wb");
+    if (file == NULL) {
+        perror("Error opening file");
+        return;
+    }
+
+    // 写入BMP文件头
+    int fileSize = sizeof(BGRAColor) * width * height;
+    int offset = 54;
+    int headerSize = 40;
+    int planes = 1;
+    int bitsPerPixel = 32;
+    int compression = 0;
+    int imageSize = fileSize - offset;
+
+    uint8_t bmpFileHeader[14] = {
+        'B', 'M',           // 文件类型
+        fileSize & 0xFF,    // 文件大小
+        (fileSize >> 8) & 0xFF,
+        (fileSize >> 16) & 0xFF,
+        (fileSize >> 24) & 0xFF,
+        0, 0, 0, 0,        // 保留位
+        offset & 0xFF,      // 数据偏移
+        (offset >> 8) & 0xFF,
+        (offset >> 16) & 0xFF,
+        (offset >> 24) & 0xFF
+    };
+
+    uint8_t bmpInfoHeader[40] = {
+        headerSize & 0xFF,  // 信息头大小
+        (headerSize >> 8) & 0xFF,
+        (headerSize >> 16) & 0xFF,
+        (headerSize >> 24) & 0xFF,
+        width & 0xFF,       // 图像宽度
+        (width >> 8) & 0xFF,
+        (width >> 16) & 0xFF,
+        (width >> 24) & 0xFF,
+        height & 0xFF,      // 图像高度
+        (height >> 8) & 0xFF,
+        (height >> 16) & 0xFF,
+        (height >> 24) & 0xFF,
+        planes & 0xFF,      // 平面数
+        (planes >> 8) & 0xFF,
+        bitsPerPixel & 0xFF,    // 每像素位数
+        (bitsPerPixel >> 8) & 0xFF,
+        compression & 0xFF,    // 压缩
+        (compression >> 8) & 0xFF,
+        (compression >> 16) & 0xFF,
+        (compression >> 24) & 0xFF,
+        imageSize & 0xFF,  // 图像大小
+        (imageSize >> 8) & 0xFF,
+        (imageSize >> 16) & 0xFF,
+        (imageSize >> 24) & 0xFF,
+        0, 0, 0, 0,        // 水平分辨率
+        0, 0, 0, 0,        // 垂直分辨率
+        0, 0, 0, 0,        // 使用的颜色数
+        0, 0, 0, 0         // 重要颜色数
+    };
+
+    fwrite(bmpFileHeader, 1, 14, file);
+    fwrite(bmpInfoHeader, 1, 40, file);
+
+    // 写入图像数据
+    fwrite(buffer, sizeof(BGRAColor), width * height, file);
+
+    fclose(file);
+}
+
+void flipVertical(const void* buffer, void* flippedBuffer, int width, int height) {
+    const BGRAColor* src = (const BGRAColor*)buffer;
+    BGRAColor* dest = (BGRAColor*)flippedBuffer;
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            dest[(height - 1 - y) * width + x] = src[y * width + x];
+        }
+    }
+}
 
 ///
   /// Return the handler for accessibility notifications. If no handler is
@@ -34,7 +122,10 @@
                                     struct _cef_browser_t* browser,
                                     cef_rect_t* rect){
     DEBUG_CALLBACK("get_view_rect\n");
-
+    rect->x = 0;
+    rect->y = 0;
+    rect->width = 800;
+    rect->height = 600;
   }
 
   ///
@@ -111,7 +202,17 @@
                                int width,
                                int height){
     DEBUG_CALLBACK("on_paint\n");
+    void* flippedBuffer = malloc(width * height * sizeof(BGRAColor));
+    if (flippedBuffer == NULL) {
+        perror("Memory allocation failed");
+        return;
+    }
 
+    // 垂直翻转图像数据
+    flipVertical(buffer, flippedBuffer, width, height);
+
+writeBGRAToFile("test.bmp", flippedBuffer, width, height);
+free(flippedBuffer);
   }
 
   ///
