@@ -23,7 +23,7 @@ func ShowRemoteDesktop() {
 	myWindow := a.NewWindow("终端")
 
 	openDesktopButton := widget.NewButton("打开远程桌面", func() {
-		w, err := terminal.ShowTerminal(a, "rdp", "192.168.1.128", "3389", "lichao", "lc2013!")
+		w, err := terminal.ShowTerminal(a, "rdp", "", "", "", "")
 		if err == nil {
 			w.Show()
 		} else {

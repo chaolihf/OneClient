@@ -38,7 +38,7 @@ func InitCef() {
 	C.setResourceHandlerOpenCallback(C.onResourceHandlerOpenFuncProto(C.cef_onResourceHandlerOpen))
 	C.setResourceHandlerGetResponseHeadersCallback(C.onResourceHandlerGetResponseHeadersFuncProto(C.cef_onResourceHandlerGetResponseHeaders))
 	C.setResourceHandlerReadCallback(C.onResourceHandlerReadFuncProto(C.cef_onResourceHandlerRead))
-	//C.setRenderHandlerPaintCallback(C.onRenderHandlerPaintFuncProto(C.cef_onRenderHandlerPaint))
+	C.setRenderHandlerPaintCallback(C.onRenderHandlerPaintFuncProto(C.cef_onRenderHandlerPaint))
 	C.startCef(argc, (**C.char)(unsafe.Pointer(&argv[0])))
 }
 
@@ -110,4 +110,10 @@ func cef_onResourceHandlerRead(identity C.int, data_out *C.char, bytes_to_read C
 		has_data = 1
 	}
 	return bytes_read, has_data
+}
+
+//export cef_onRenderHandlerPaint
+func cef_onRenderHandlerPaint(viewType C.int, dirtyRectsCount C.longlong, dirtyRects_x C.int, dirtyRects_y C.int, dirtyRects_width C.int, dirtyRects_height C.int,
+	buffer *C.char, width C.int, height C.int) {
+
 }

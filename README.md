@@ -121,7 +121,12 @@ if (onRenderHandlerPaintCallback){
 在cefBrowser.go中初始化
 C.setRenderHandlerPaintCallback(C.onRenderHandlerPaintFuncProto(C.cef_onRenderHandlerPaint))
 
+增加导出函数的说明
+//export cef_onRenderHandlerPaint
+func cef_onRenderHandlerPaint(viewType C.int, dirtyRectsCount C.longlong, dirtyRects_x C.int, dirtyRects_y C.int, dirtyRects_width C.int, dirtyRects_height C.int,
+	buffer *C.char, width C.int, height C.int) {
 
+}
 ## 服务端证书
 需要使用cmd/uiExperienceService/generateKey.bat生成证书，注意其中需要在http.ext中配置证书绑定的域名或IP地址，否则导入windows下的根证书也是没有用的，仍然显示不安全的网站。
 在管理员权限下执行certutil -addstore -f "Root" server.crt
